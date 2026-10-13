@@ -1,18 +1,36 @@
 # MT Alchemy Website
 
+**Live site: https://navadeep1172.github.io/mt-alchemy-website/**
+
 A Flutter (web + mobile) prototype for **MT Alchemy (Kaedae Event Management)**,
 built for the INTI **NET4207** coursework. It covers the four core modules from
 the brief: the **public marketing site**, the **Learning Management System
 (LMS)**, the **online store**, and the **admin / dashboard** area, across **26
 routes** and **5 user roles**.
 
-## Running
+## Viewing the site
+
+The prototype is deployed to GitHub Pages and can be opened directly in any
+browser (no install required):
+
+**https://navadeep1172.github.io/mt-alchemy-website/**
+
+## Running locally
 
 ```bash
 flutter pub get
 flutter run -d chrome        # run as a web app
 # or
 flutter build web --release  # production build into build/web
+```
+
+## Deploying updates
+
+After changing the code, publish the new build to the `gh-pages` branch:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tool\deploy_gh_pages.ps1 `
+    -RepoUrl https://github.com/Navadeep1172/mt-alchemy-website.git
 ```
 
 Fonts are loaded through `google_fonts` (Fraunces for headings, Inter for body).
