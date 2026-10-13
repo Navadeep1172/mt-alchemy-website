@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:mt_alchemy_website/main.dart';
+
+/// Routes that do not require arguments (argument routes fall back to the
+/// first Course / Product automatically, so they are still covered).
+const routes = [
+  '/',
+  '/about',
+  '/services',
+  '/coaching',
+  '/organisations',
+  '/programmes',
+  '/upskilling',
+  '/insights',
+  '/impact',
+  '/contact',
+  '/login',
+  '/register',
+  '/store',
+  '/product',
+  '/cart',
+  '/checkout',
+  '/order',
+  '/myorders',
+  '/library',
+  '/course',
+  '/player',
+  '/quiz',
+  '/certificate',
+  '/learner',
+  '/employer',
+  '/admin',
+];
+
+void main() {
+  final sizes = {
+    'desktop': const Size(1400, 1000),
+    'tablet': const Size(820, 1100),
+    'mobile': const Size(390, 844),
+  };
+
+  for (final entry in sizes.entries) {
+    for (final route in routes) {
+      testWidgets('${entry.key} renders $route without overflow',
+          (tester) async {
+        tester.view.physicalSize = entry.value;
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+
+        await tester.pumpWidget(const MtAlchemyApp());
+        await tester.pumpAndSettle();
+        final nav = tester.state<NavigatorState>(find.byType(Navigator));
+        nav.pushNamed(route);
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+      });
+    }
+  }
+}
