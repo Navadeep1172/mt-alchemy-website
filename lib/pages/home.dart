@@ -25,9 +25,6 @@ class HomePage extends StatelessWidget {
             label: const Text("I'm an Individual"),
           ),
           OutlinedButton.icon(
-            style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.white,
-                side: const BorderSide(color: Colors.white54)),
             onPressed: () => go(context, '/organisations'),
             icon: const Icon(Icons.apartment_outlined),
             label: const Text("I'm an Employer"),
@@ -38,14 +35,14 @@ class HomePage extends StatelessWidget {
       // ---- Capability ticker ----
       Container(
         width: double.infinity,
-        color: Brand.tealDark,
+        color: Brand.sageTint,
         child: Marquee(
           gap: 28,
           separator: Container(
             width: 4,
             height: 4,
             decoration: const BoxDecoration(
-              color: Color(0x66E8A33D),
+              color: Color(0x66C97B4A),
               shape: BoxShape.circle,
             ),
           ),
@@ -62,7 +59,7 @@ class HomePage extends StatelessWidget {
             ])
               Text(k.toUpperCase(),
                   style: body(12.5,
-                          color: Colors.white70, weight: FontWeight.w600)
+                          color: Brand.green, weight: FontWeight.w600)
                       .copyWith(letterSpacing: 1.8)),
           ],
         ),
@@ -95,7 +92,7 @@ class HomePage extends StatelessWidget {
 
       // ---- Upskilling ----
       Section(
-        color: Brand.aquaTint,
+        color: Brand.sageTint,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -123,7 +120,7 @@ class HomePage extends StatelessWidget {
           final content = Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Eyebrow('Corporate solutions', color: Brand.aqua),
+              const Eyebrow('Corporate solutions', color: Brand.clayDeep),
               const SizedBox(height: 14),
               Text('Develop your people. Strengthen your organization.',
                   style: heading(30)),
@@ -178,12 +175,16 @@ class HomePage extends StatelessWidget {
       // ---- Impact + testimonials ----
       Section(
         gradient: const LinearGradient(
-          colors: [Brand.teal, Brand.aqua],
+          colors: [Brand.forestDark, Brand.green],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
+        backdrop: const AnimatedBackdrop(
+          intensity: 0.5,
+          colors: [Brand.sageLight, Brand.clay],
+        ),
         child: Column(children: [
-          const Eyebrow('Our impact', color: Brand.amber),
+          const Eyebrow('Our impact', color: Brand.sageLight),
           const SizedBox(height: 16),
           AnimatedCount('1,100+', style: heading(64, color: Colors.white)),
           Text('participants impacted across corporate, education, youth, NGO and community work.',
@@ -195,7 +196,7 @@ class HomePage extends StatelessWidget {
             children: [
               for (final t in testimonials)
                 HoverLift(
-                  glow: Brand.amber,
+                  glow: Brand.clay,
                   cursorClick: false,
                   child: Panel(
                     color: Colors.white.withValues(alpha: 0.08),
@@ -203,13 +204,13 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.format_quote, color: Brand.amber),
+                        const Icon(Icons.format_quote, color: Brand.clay),
                         const SizedBox(height: 12),
                         Text('“${t.$1}”',
                             style: body(15, color: Colors.white, height: 1.6)),
                         const SizedBox(height: 14),
                         Text('— ${t.$2}',
-                            style: body(13, color: Brand.amber)),
+                            style: body(13, color: Brand.sageLight)),
                       ],
                     ),
                   ),

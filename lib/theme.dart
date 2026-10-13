@@ -1,43 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// MT Alchemy brand palette: deep teal with a warm amber accent.
-/// Teal carries authority and calm (the consultancy voice); amber marks the
-/// moments that need action; luminous aqua is reserved for progress and
-/// secondary detail so the palette never feels busy.
+/// MT Alchemy brand palette: warm ivory canvas, forest green and terracotta
+/// clay. Deliberately no blue: green carries the human, grounded consultancy
+/// voice, clay marks the moments that need action, and sage keeps secondary
+/// detail quiet.
 class Brand {
-  /// Deepest teal - footers, app bar, app-level ink.
-  static const tealDark = Color(0xFF062A33);
+  /// Deep forest - dark bands, footer, CTA panel.
+  static const forestDark = Color(0xFF1E3226);
 
-  /// Primary brand colour - headings, primary surfaces.
-  static const teal = Color(0xFF0E4C5C);
+  /// Primary brand colour - headings, primary surfaces, primary buttons.
+  static const green = Color(0xFF2F6B4F);
 
-  /// Lighter teal for gradients and supporting surfaces.
-  static const tealLight = Color(0xFF1E7585);
+  /// Darker green for hover states.
+  static const greenDeep = Color(0xFF24523C);
 
-  /// Accent amber - calls to action and the alchemy spark.
-  static const amber = Color(0xFFE8A33D);
+  /// Lighter green for gradients and supporting surfaces.
+  static const greenLight = Color(0xFF4C8F6B);
 
-  /// Deeper amber for hover states.
-  static const amberDeep = Color(0xFFC4841D);
+  /// Accent clay - calls to action and the alchemy spark.
+  static const clay = Color(0xFFC97B4A);
 
-  /// Secondary accent - luminous aqua for progress and detail.
-  static const aqua = Color(0xFF3C9AAB);
-  static const aquaLight = Color(0xFF7FC7D1);
+  /// Deeper clay for hover states and fills that carry ivory text.
+  static const clayDeep = Color(0xFFA8542E);
 
-  /// Pale aqua wash for tinted panels.
-  static const aquaTint = Color(0xFFEAF4F6);
+  /// Secondary accent - muted sage for progress and detail.
+  static const sage = Color(0xFF7E9B87);
+  static const sageLight = Color(0xFFA8C0AE);
 
-  static const mist = Color(0xFFF6F9FA);
-  static const ink = Color(0xFF1D2429);
-  static const grey = Color(0xFF5B6871);
-  static const line = Color(0xFFE1E8EA);
+  /// Pale sage wash for tinted panels.
+  static const sageTint = Color(0xFFEDF3EC);
+
+  /// Warm neutral surfaces.
+  static const mist = Color(0xFFF8F5EF);
+  static const paper = Color(0xFFFCFAF6);
+  static const ink = Color(0xFF22221E);
+  static const grey = Color(0xFF6B6A63);
+  static const line = Color(0xFFE6E1D7);
   static const success = Color(0xFF2E9E6B);
 }
 
 /// Headings use a warm serif so the platform feels human-centred, not corporate-cold.
 TextStyle heading(double size,
-        {Color color = Brand.teal,
+        {Color color = Brand.green,
         FontWeight weight = FontWeight.w600,
         double height = 1.15}) =>
     GoogleFonts.fraunces(
@@ -53,27 +58,30 @@ TextStyle body(double size,
 
 ThemeData buildTheme() {
   final scheme = ColorScheme.fromSeed(
-    seedColor: Brand.teal,
-    primary: Brand.teal,
-    secondary: Brand.amber,
-    tertiary: Brand.aqua,
+    seedColor: Brand.green,
+    primary: Brand.green,
+    secondary: Brand.clay,
+    tertiary: Brand.sage,
     surface: Colors.white,
   );
 
   final base = ThemeData(
     useMaterial3: true,
     colorScheme: scheme,
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: Brand.paper,
   );
 
   return base.copyWith(
     textTheme: GoogleFonts.interTextTheme(base.textTheme)
-        .apply(bodyColor: Brand.ink, displayColor: Brand.teal),
+        .apply(bodyColor: Brand.ink, displayColor: Brand.green),
+    // Light, airy app bar with a hairline rule instead of a heavy dark slab.
     appBarTheme: const AppBarTheme(
-      backgroundColor: Brand.teal,
-      foregroundColor: Colors.white,
+      backgroundColor: Brand.paper,
+      foregroundColor: Brand.ink,
       elevation: 0,
+      scrolledUnderElevation: 0,
       centerTitle: false,
+      shape: Border(bottom: BorderSide(color: Brand.line)),
     ),
     // Buttons animate their colour, elevation and border on hover/focus so
     // every interaction in the prototype gives live feedback.
@@ -83,12 +91,12 @@ ThemeData buildTheme() {
         backgroundColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.hovered) ||
               states.contains(WidgetState.focused)) {
-            return Brand.amberDeep;
+            return Brand.greenDeep;
           }
-          if (states.contains(WidgetState.pressed)) return Brand.amber;
-          return Brand.amber;
+          if (states.contains(WidgetState.pressed)) return Brand.forestDark;
+          return Brand.green;
         }),
-        foregroundColor: const WidgetStatePropertyAll(Brand.tealDark),
+        foregroundColor: const WidgetStatePropertyAll(Color(0xFFF7F4EC)),
         padding: const WidgetStatePropertyAll(
             EdgeInsets.symmetric(horizontal: 24, vertical: 18)),
         shape: WidgetStatePropertyAll(
@@ -97,7 +105,7 @@ ThemeData buildTheme() {
             TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
         elevation: WidgetStateProperty.resolveWith((states) =>
             states.contains(WidgetState.hovered) ? 2 : 0),
-        shadowColor: const WidgetStatePropertyAll(Color(0x33062A33)),
+        shadowColor: const WidgetStatePropertyAll(Color(0x332A2A24)),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
@@ -105,16 +113,16 @@ ThemeData buildTheme() {
         animationDuration: const Duration(milliseconds: 200),
         foregroundColor: WidgetStateProperty.resolveWith((states) =>
             states.contains(WidgetState.hovered)
-                ? Brand.aqua
-                : Brand.teal),
+                ? Brand.greenDeep
+                : Brand.ink),
         backgroundColor: WidgetStateProperty.resolveWith((states) =>
             states.contains(WidgetState.hovered)
-                ? Brand.aquaTint
+                ? Brand.sageTint
                 : Colors.transparent),
         side: WidgetStateProperty.resolveWith((states) => BorderSide(
             color: states.contains(WidgetState.hovered)
-                ? Brand.aqua
-                : Brand.teal,
+                ? Brand.greenDeep
+                : Brand.ink,
             width: states.contains(WidgetState.hovered) ? 1.8 : 1.4)),
         padding: const WidgetStatePropertyAll(
             EdgeInsets.symmetric(horizontal: 24, vertical: 18)),
@@ -129,14 +137,14 @@ ThemeData buildTheme() {
         animationDuration: const Duration(milliseconds: 180),
         foregroundColor: WidgetStateProperty.resolveWith((states) =>
             states.contains(WidgetState.hovered)
-                ? Brand.aqua
-                : Brand.teal),
+                ? Brand.clayDeep
+                : Brand.green),
         textStyle: const WidgetStatePropertyAll(
             TextStyle(fontWeight: FontWeight.w600, fontSize: 14.5)),
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: Brand.teal,
+      backgroundColor: Brand.clayDeep,
       foregroundColor: Colors.white,
       elevation: 3,
       focusElevation: 5,
@@ -155,7 +163,7 @@ ThemeData buildTheme() {
           borderSide: const BorderSide(color: Brand.line)),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Brand.aqua, width: 1.8)),
+          borderSide: const BorderSide(color: Brand.green, width: 1.8)),
       labelStyle: const TextStyle(color: Brand.grey),
     ),
     cardTheme: CardThemeData(
@@ -168,7 +176,7 @@ ThemeData buildTheme() {
     ),
     chipTheme: base.chipTheme.copyWith(
       labelStyle: const TextStyle(
-          color: Brand.teal, fontWeight: FontWeight.w600),
+          color: Brand.green, fontWeight: FontWeight.w600),
     ),
   );
 }

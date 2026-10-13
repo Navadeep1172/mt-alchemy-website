@@ -143,6 +143,115 @@ class _RevealState extends State<Reveal>
   }
 }
 
+/// A short accent rule that draws itself in from the left the first time it
+/// scrolls into view. Used as the kicker above section headings.
+class DrawBar extends StatefulWidget {
+  final double width;
+  final double height;
+  final Color color;
+  final Duration delay;
+  final Duration duration;
+  const DrawBar({
+    super.key,
+    this.width = 52,
+    this.height = 4,
+    this.color = Brand.clay,
+    this.delay = const Duration(milliseconds: 120),
+    this.duration = const Duration(milliseconds: 760),
+  });
+
+  @override
+  State<DrawBar> createState() => _DrawBarState();
+}
+
+class _DrawBarState extends State<DrawBar> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _t;
+  ScrollPosition? _position;
+  bool _started = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final total = widget.delay + widget.duration;
+    _controller = AnimationController(vsync: this, duration: total);
+    final start = total.inMicroseconds == 0
+        ? 0.0
+        : widget.delay.inMicroseconds / total.inMicroseconds;
+    _t = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(start.clamp(0.0, 0.99), 1.0, curve: Curves.easeOutCubic),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_started) return;
+    if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) {
+      _controller.value = 1;
+      _started = true;
+      return;
+    }
+    _position = Scrollable.maybeOf(context)?.position;
+    _position?.addListener(_check);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _check());
+  }
+
+  void _check() {
+    if (_started || !mounted) return;
+    final box = context.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize || !box.attached) return;
+    final top = box.localToGlobal(Offset.zero).dy;
+    final screen = MediaQuery.of(context).size.height;
+    if (top < screen * 0.94) _start();
+  }
+
+  void _start() {
+    if (_started || !mounted) return;
+    _started = true;
+    _position?.removeListener(_check);
+    _position = null;
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _position?.removeListener(_check);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _t,
+      builder: (context, _) {
+        final v = _t.value.clamp(0.0, 1.0);
+        return Opacity(
+          opacity: (v * 1.6).clamp(0.0, 1.0),
+          child: SizedBox(
+            width: widget.width,
+            height: widget.height,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: FractionallySizedBox(
+                widthFactor: v,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: widget.color,
+                    borderRadius: BorderRadius.circular(widget.height),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 /// Pointer-reactive lift: a quiet raise and soft shadow while hovered.
 class HoverLift extends StatefulWidget {
   final Widget child;
@@ -157,7 +266,7 @@ class HoverLift extends StatefulWidget {
     this.lift = 5,
     this.scale = 1.008,
     this.radius = 14,
-    this.glow = Brand.aqua,
+    this.glow = Brand.sage,
     this.cursorClick = true,
   });
 
@@ -245,9 +354,9 @@ class AnimatedBackdrop extends StatefulWidget {
     this.child,
     this.intensity = 1,
     this.colors = const [
-      Brand.aqua,
-      Brand.tealLight,
-      Brand.amber,
+      Brand.sage,
+      Brand.greenLight,
+      Brand.clay,
     ],
   });
 
@@ -512,7 +621,7 @@ class GradientText extends StatefulWidget {
     this.text, {
     super.key,
     required this.style,
-    this.colors = const [Colors.white, Color(0xFFFFE8C7), Colors.white],
+    this.colors = const [Brand.green, Brand.clayDeep, Brand.green],
     this.period = const Duration(seconds: 9),
     this.textAlign,
   });
@@ -575,7 +684,7 @@ class GradientProgressBar extends StatefulWidget {
     required this.value,
     this.height = 8,
     this.track = Brand.mist,
-    this.colors = const [Brand.aqua, Brand.aquaLight],
+    this.colors = const [Brand.green, Brand.clay],
   });
 
   @override

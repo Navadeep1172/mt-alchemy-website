@@ -26,7 +26,7 @@ class _Dashboard extends StatelessWidget {
       width: wide ? 250 : double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Brand.teal,
+        color: Brand.forestDark,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
@@ -34,7 +34,7 @@ class _Dashboard extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(12),
-            child: Text(title, style: heading(20, color: Brand.amber)),
+            child: Text(title, style: heading(20, color: Brand.sageLight)),
           ),
           const SizedBox(height: 6),
           for (var i = 0; i < nav.length; i++)
@@ -52,7 +52,7 @@ class _Dashboard extends StatelessWidget {
                     dense: true,
                     leading: Icon(nav[i].icon,
                         size: 20,
-                        color: i == 0 ? Brand.amber : Colors.white70),
+                        color: i == 0 ? Brand.clay : Colors.white70),
                     title: Text(nav[i].label,
                         style: body(14,
                             color: Colors.white,
@@ -138,10 +138,10 @@ class LearnerDashboardPage extends StatelessWidget {
         nav: _nav,
         content: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           CardGrid(children: [
-            const _Stat('3', 'Courses enrolled', Icons.school_outlined, Brand.aqua),
-            const _Stat('2', 'In progress', Icons.timelapse, Brand.amberDeep),
+            const _Stat('3', 'Courses enrolled', Icons.school_outlined, Brand.sage),
+            const _Stat('2', 'In progress', Icons.timelapse, Brand.clayDeep),
             const _Stat('1', 'Completed', Icons.verified_outlined, Brand.success),
-            const _Stat('6.5h', 'Learning hours', Icons.access_time, Brand.teal),
+            const _Stat('6.5h', 'Learning hours', Icons.access_time, Brand.green),
           ]),
           const SizedBox(height: 20),
           Panel(
@@ -195,7 +195,7 @@ class LearnerDashboardPage extends StatelessWidget {
                       style: body(14.5, weight: FontWeight.w600))),
               const SizedBox(width: 8),
               Text('65%',
-                  style: body(13, color: Brand.teal, weight: FontWeight.w700)),
+                  style: body(13, color: Brand.green, weight: FontWeight.w700)),
             ]),
             const SizedBox(height: 6),
             const GradientProgressBar(value: progress, height: 8),
@@ -216,7 +216,7 @@ class LearnerDashboardPage extends StatelessWidget {
   static Widget _row(IconData icon, String text) => Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: Row(children: [
-          Icon(icon, size: 18, color: Brand.aqua),
+          Icon(icon, size: 18, color: Brand.sage),
           const SizedBox(width: 10),
           Expanded(child: Text(text, style: body(14))),
         ]),
@@ -243,9 +243,9 @@ class EmployerDashboardPage extends StatelessWidget {
         nav: _nav,
         content: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           CardGrid(children: [
-            const _Stat('120', 'Total employees', Icons.groups_outlined, Brand.aqua),
-            const _Stat('78', 'Active learners', Icons.school_outlined, Brand.teal),
-            const _Stat('12', 'Courses assigned', Icons.menu_book_outlined, Brand.amberDeep),
+            const _Stat('120', 'Total employees', Icons.groups_outlined, Brand.sage),
+            const _Stat('78', 'Active learners', Icons.school_outlined, Brand.green),
+            const _Stat('12', 'Courses assigned', Icons.menu_book_outlined, Brand.clayDeep),
             const _Stat('64%', 'Completion rate', Icons.percent, Brand.success),
           ]),
           const SizedBox(height: 20),
@@ -291,7 +291,7 @@ class EmployerDashboardPage extends StatelessWidget {
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                       Text(d.$1, style: body(13.5, weight: FontWeight.w600)),
                       Text('${(d.$2 * 100).round()}%',
-                          style: body(13, color: Brand.teal)),
+                          style: body(13, color: Brand.green)),
                     ]),
                     const SizedBox(height: 6),
                     GradientProgressBar(value: d.$2, height: 8),
@@ -312,7 +312,7 @@ class EmployerDashboardPage extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
-        headingTextStyle: body(13, color: Brand.teal, weight: FontWeight.w700),
+        headingTextStyle: body(13, color: Brand.green, weight: FontWeight.w700),
         dataTextStyle: body(13),
         columns: const [
           DataColumn(label: Text('Employee')),
@@ -340,7 +340,7 @@ class EmployerDashboardPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: e.$5 == 'Completed'
                       ? Brand.success.withValues(alpha: 0.14)
-                      : Brand.amber.withValues(alpha: 0.4),
+                      : Brand.clay.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Text(e.$5,
@@ -348,7 +348,7 @@ class EmployerDashboardPage extends StatelessWidget {
                         weight: FontWeight.w600,
                         color: e.$5 == 'Completed'
                             ? Brand.success
-                            : Brand.teal)),
+                            : Brand.green)),
               )),
             ]),
         ],
@@ -384,9 +384,9 @@ class AdminDashboardPage extends StatelessWidget {
         nav: _nav,
         content: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           CardGrid(children: [
-            const _Stat('1,240', 'Users', Icons.people_outline, Brand.aqua),
-            const _Stat('18', 'Organizations', Icons.apartment_outlined, Brand.teal),
-            const _Stat('24', 'Courses', Icons.school_outlined, Brand.amberDeep),
+            const _Stat('1,240', 'Users', Icons.people_outline, Brand.sage),
+            const _Stat('18', 'Organizations', Icons.apartment_outlined, Brand.green),
+            const _Stat('24', 'Courses', Icons.school_outlined, Brand.clayDeep),
             const _Stat('RM42k', 'Revenue', Icons.payments_outlined, Brand.success),
           ]),
           const SizedBox(height: 20),
@@ -396,8 +396,8 @@ class AdminDashboardPage extends StatelessWidget {
                 Text('Course management', style: heading(18)),
                 const SizedBox(height: 12),
                 _step('Draft', Brand.grey),
-                _step('Published', Brand.aqua),
-                _step('Archived', Brand.teal),
+                _step('Published', Brand.sage),
+                _step('Archived', Brand.green),
                 const SizedBox(height: 10),
                 OutlinedButton.icon(
                     onPressed: () {},
@@ -410,8 +410,8 @@ class AdminDashboardPage extends StatelessWidget {
                 Text('Product management', style: heading(18)),
                 const SizedBox(height: 12),
                 _step('Add product', Brand.grey),
-                _step('Set price & stock', Brand.aqua),
-                _step('Publish', Brand.teal),
+                _step('Set price & stock', Brand.sage),
+                _step('Publish', Brand.green),
                 const SizedBox(height: 10),
                 OutlinedButton.icon(
                     onPressed: () {},
@@ -424,8 +424,8 @@ class AdminDashboardPage extends StatelessWidget {
                 Text('Order management', style: heading(18)),
                 const SizedBox(height: 12),
                 _step('Pending', Brand.grey),
-                _step('Paid', Brand.amberDeep),
-                _step('Shipped', Brand.aqua),
+                _step('Paid', Brand.clayDeep),
+                _step('Shipped', Brand.sage),
                 _step('Delivered', Brand.success),
                 const SizedBox(height: 10),
                 OutlinedButton.icon(

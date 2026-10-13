@@ -75,8 +75,9 @@ consultancy rather than a demo reel:
 | `AnimatedBackdrop` – softly drifting aurora wash | hero bands, CTA band, drawer header |
 | `Marquee` – slow capability ticker | home page |
 | `AnimatedCount` | impact figure and dashboard KPIs |
-| `GradientText` – faint white-to-warm sheen | hero heading |
+| `GradientText` – faint green-to-clay sheen | hero heading |
 | `GradientProgressBar` | course and dashboard progress |
+| `DrawBar` – clay rule that draws itself in | every `SectionHeading` |
 | `fadeSlideRoute` – gentle fade + rise | page transition for every route |
 | reading-progress accent bar, nav underline | `Shell` |
 
@@ -117,8 +118,10 @@ assets/images/     31 extracted brand images
 
 ## Brand
 
-Deep Teal `#0E4C5C` · Teal ink `#062A33` · Aqua `#3C9AAB` · Amber `#E8A33D`,
-defined in `lib/theme.dart` (`Brand`, `buildTheme()`). Teal carries the
-consultancy voice, amber marks actions, and aqua is reserved for progress and
-secondary detail. Small text colours were chosen to keep AA contrast on their
+Forest `#1E3226` · Green `#2F6B4F` · Clay `#C97B4A` · Sage `#7E9B87` on a warm
+ivory canvas (`paper #FCFAF6`, `mist #F8F5EF`, `sageTint #EDF3EC`), defined in
+`lib/theme.dart` (`Brand`, `buildTheme()`). Forest anchors headings and dark
+bands, green carries the consultancy voice and primary actions, clay marks
+calls to action and accents, and sage is reserved for progress and secondary
+detail. Small text colours were chosen to keep AA contrast on their
 backgrounds.

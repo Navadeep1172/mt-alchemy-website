@@ -57,7 +57,7 @@ class _ShellState extends State<Shell> {
           ? null
           : FloatingActionButton.extended(
               onPressed: () => go(context, '/cart'),
-              backgroundColor: Brand.teal,
+              backgroundColor: Brand.green,
               foregroundColor: Colors.white,
               icon: const Icon(Icons.shopping_cart_outlined),
               label: const Text('Cart'),
@@ -88,7 +88,7 @@ class _ShellState extends State<Shell> {
           Flexible(
             child: Text('MT Alchemy',
                 overflow: TextOverflow.ellipsis,
-                style: heading(22, color: Colors.white)),
+                style: heading(22, color: Brand.green)),
           ),
         ]),
       ),
@@ -121,7 +121,7 @@ class _ShellState extends State<Shell> {
               padding: const EdgeInsets.all(24),
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Brand.teal, Brand.tealLight],
+                  colors: [Brand.forestDark, Brand.green],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -132,7 +132,7 @@ class _ShellState extends State<Shell> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('MT Alchemy',
-                        style: heading(24, color: Brand.amber)),
+                        style: heading(24, color: Brand.clay)),
                     const SizedBox(height: 4),
                     Text('People development consultancy',
                         style: body(13, color: Colors.white70)),
@@ -147,7 +147,7 @@ class _ShellState extends State<Shell> {
                 child: ListTile(
                   leading: Icon(allRoutes[i].icon,
                       color: route == allRoutes[i].path
-                          ? Brand.aqua
+                          ? Brand.green
                           : Brand.grey),
                   title: Text(allRoutes[i].label,
                       style: TextStyle(
@@ -155,7 +155,7 @@ class _ShellState extends State<Shell> {
                               ? FontWeight.w700
                               : FontWeight.w500)),
                   selected: route == allRoutes[i].path,
-                  selectedTileColor: Brand.aquaTint,
+                  selectedTileColor: Brand.sageTint,
                   onTap: () {
                     Navigator.pop(context); // close drawer
                     go(context, allRoutes[i].path);
@@ -165,7 +165,7 @@ class _ShellState extends State<Shell> {
             const Divider(),
             ListTile(
               leading:
-                  const Icon(Icons.shopping_cart_outlined, color: Brand.aqua),
+                  const Icon(Icons.shopping_cart_outlined, color: Brand.clayDeep),
               title: const Text('Cart'),
               onTap: () {
                 Navigator.pop(context);
@@ -189,7 +189,7 @@ class _LogoBadge extends StatelessWidget {
       height: 38,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Brand.amber, Brand.amberDeep],
+          colors: [Brand.clay, Brand.clayDeep],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -197,7 +197,7 @@ class _LogoBadge extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child:
-          Text('MT', style: heading(16, color: Brand.teal, weight: FontWeight.w700)),
+          Text('MT', style: heading(16, color: Brand.ink, weight: FontWeight.w700)),
     );
   }
 }
@@ -225,14 +225,14 @@ class _NavLinkState extends State<_NavLink> {
       child: TextButton(
         onPressed: widget.onTap,
         style: TextButton.styleFrom(
-          foregroundColor: on ? Brand.amber : Colors.white,
+          foregroundColor: on ? Brand.green : Brand.ink,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
         ),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Text(
             widget.item.label,
             style: TextStyle(
-              color: on ? Brand.amber : Colors.white,
+              color: on ? Brand.green : Brand.ink,
               fontWeight: on ? FontWeight.w700 : FontWeight.w500,
               fontSize: 14.5,
             ),
@@ -244,7 +244,7 @@ class _NavLinkState extends State<_NavLink> {
             height: 2,
             width: on ? 20 : 0,
             decoration: BoxDecoration(
-              color: Brand.amber,
+              color: Brand.clay,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -265,7 +265,7 @@ class _ScrollProgress extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: FractionallySizedBox(
             widthFactor: value.clamp(0.0, 1.0),
-            child: Container(color: Brand.amber),
+            child: Container(color: Brand.clay),
           ),
         ),
       );
@@ -361,7 +361,7 @@ class Panel extends StatelessWidget {
         border: Border.all(color: borderColor ?? Brand.line),
         boxShadow: const [
           BoxShadow(
-              color: Color(0x0F0E4C5C), blurRadius: 24, offset: Offset(0, 8)),
+              color: Color(0x142A2A24), blurRadius: 24, offset: Offset(0, 8)),
         ],
       ),
       padding: padding,
@@ -386,7 +386,7 @@ class Panel extends StatelessWidget {
 class Eyebrow extends StatelessWidget {
   final String text;
   final Color color;
-  const Eyebrow(this.text, {super.key, this.color = Brand.teal});
+  const Eyebrow(this.text, {super.key, this.color = Brand.green});
   @override
   Widget build(BuildContext context) => Text(
         text.toUpperCase(),
@@ -425,7 +425,7 @@ class PageHero extends StatelessWidget {
       children: [
         Reveal(
           duration: const Duration(milliseconds: 520),
-          child: Eyebrow(eyebrow, color: Brand.amber),
+          child: Eyebrow(eyebrow, color: Brand.clayDeep),
         ),
         const SizedBox(height: 18),
         Reveal(
@@ -437,8 +437,7 @@ class PageHero extends StatelessWidget {
         const SizedBox(height: 18),
         Reveal(
           delay: const Duration(milliseconds: 240),
-          child: Text(subtitle,
-              style: body(18, color: Colors.white.withValues(alpha: 0.85))),
+          child: Text(subtitle, style: body(18, color: Brand.grey)),
         ),
         if (actions.isNotEmpty) ...[
           const SizedBox(height: 30),
@@ -454,13 +453,13 @@ class PageHero extends StatelessWidget {
       vertical: 72,
       reveal: false,
       gradient: const LinearGradient(
-        colors: [Brand.tealDark, Brand.teal],
+        colors: [Brand.sageTint, Brand.paper],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
       backdrop: const AnimatedBackdrop(
-        intensity: 0.55,
-        colors: [Brand.aquaLight, Brand.amber],
+        intensity: 0.5,
+        colors: [Brand.sageLight, Brand.clay, Brand.greenLight],
       ),
       child: wide && image != null
           ? Row(
@@ -493,12 +492,11 @@ class _HeroImage extends StatelessWidget {
         height: 360,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-              color: Colors.white.withValues(alpha: 0.16), width: 1),
+          border: Border.all(color: Colors.white, width: 6),
           image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
           boxShadow: const [
             BoxShadow(
-                color: Color(0x40062A33), blurRadius: 34, offset: Offset(0, 16)),
+                color: Color(0x2E2A2A22), blurRadius: 38, offset: Offset(0, 18)),
           ],
         ),
       );
@@ -513,7 +511,7 @@ class ServiceCard extends StatelessWidget {
   const ServiceCard(this.item, {super.key, this.showCta = false});
   @override
   Widget build(BuildContext context) => HoverLift(
-        glow: Brand.aqua,
+        glow: Brand.sage,
         child: Panel(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -522,14 +520,10 @@ class ServiceCard extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Brand.teal, Brand.tealLight],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: Brand.sageTint,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(item.icon, color: Colors.white, size: 22),
+                child: Icon(item.icon, color: Brand.green, size: 22),
               ),
               const SizedBox(height: 16),
               Text(item.title, style: heading(19)),
@@ -545,7 +539,7 @@ class ServiceCard extends StatelessWidget {
                 ),
                 child: Text('For: ${item.whoFor}',
                     style: body(12,
-                        color: Brand.teal, weight: FontWeight.w600)),
+                        color: Brand.green, weight: FontWeight.w600)),
               ),
               if (showCta) ...[
                 const SizedBox(height: 16),
@@ -566,7 +560,7 @@ class CourseCard extends StatelessWidget {
   const CourseCard(this.course, {super.key});
   @override
   Widget build(BuildContext context) => HoverLift(
-        glow: Brand.aqua,
+        glow: Brand.sage,
         child: Panel(
           onTap: () =>
               Navigator.pushNamed(context, '/course', arguments: course),
@@ -587,9 +581,10 @@ class CourseCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(course.category,
-                        style: body(12,
-                            color: Brand.aqua, weight: FontWeight.w700)),
+                    Text(course.category.toUpperCase(),
+                        style: body(11.5,
+                                color: Brand.clayDeep, weight: FontWeight.w700)
+                            .copyWith(letterSpacing: 1.2)),
                     const SizedBox(height: 6),
                     Text(course.title, style: heading(18), maxLines: 2,
                         overflow: TextOverflow.ellipsis),
@@ -615,10 +610,10 @@ class CourseCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('RM${course.price.toStringAsFixed(0)}',
-                            style: heading(18, color: Brand.teal)),
+                            style: heading(18, color: Brand.green)),
                         Row(children: [
                           const Icon(Icons.star,
-                              size: 16, color: Brand.amberDeep),
+                              size: 16, color: Brand.clayDeep),
                           const SizedBox(width: 4),
                           Text(course.rating.toStringAsFixed(1), style: body(13)),
                         ]),
@@ -638,7 +633,7 @@ class ProductCard extends StatelessWidget {
   const ProductCard(this.product, {super.key});
   @override
   Widget build(BuildContext context) => HoverLift(
-        glow: Brand.tealLight,
+        glow: Brand.greenLight,
         child: Panel(
           onTap: () =>
               Navigator.pushNamed(context, '/product', arguments: product),
@@ -663,14 +658,14 @@ class ProductCard extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
                     decoration: BoxDecoration(
                       color: product.type == 'Digital'
-                          ? Brand.aqua
-                          : Brand.teal,
+                          ? Brand.sageLight
+                          : Brand.green,
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(product.type,
                         style: body(11,
                             color: product.type == 'Digital'
-                                ? Brand.tealDark
+                                ? Brand.forestDark
                                 : Colors.white,
                             weight: FontWeight.w700)),
                   ),
@@ -693,7 +688,7 @@ class ProductCard extends StatelessWidget {
                         maxLines: 2, overflow: TextOverflow.ellipsis),
                     const SizedBox(height: 14),
                     Text('RM${product.price.toStringAsFixed(0)}',
-                        style: heading(18, color: Brand.teal)),
+                        style: heading(18, color: Brand.green)),
                   ],
                 ),
               ),
@@ -708,7 +703,7 @@ class StoryCard extends StatelessWidget {
   const StoryCard(this.story, {super.key});
   @override
   Widget build(BuildContext context) => HoverLift(
-        glow: Brand.amberDeep,
+        glow: Brand.clayDeep,
         child: Panel(
           padding: EdgeInsets.zero,
           child: Column(
@@ -732,11 +727,11 @@ class StoryCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 9, vertical: 4),
                         decoration: BoxDecoration(
-                            color: Brand.amber,
+                            color: Brand.clay,
                             borderRadius: BorderRadius.circular(6)),
                         child: Text(story.clientType,
                             style: body(11,
-                                color: Brand.tealDark,
+                                color: Brand.forestDark,
                                 weight: FontWeight.w700)),
                       ),
                       const SizedBox(width: 8),
@@ -811,6 +806,12 @@ class SectionHeading extends StatelessWidget {
           crossAxisAlignment:
               center ? CrossAxisAlignment.center : CrossAxisAlignment.start,
           children: [
+            Align(
+              alignment:
+                  center ? Alignment.center : Alignment.centerLeft,
+              child: const DrawBar(),
+            ),
+            const SizedBox(height: 14),
             Text(title,
                 textAlign: center ? TextAlign.center : TextAlign.start,
                 style: heading(30)),
@@ -842,27 +843,31 @@ class CtaBand extends StatelessWidget {
   Widget build(BuildContext context) => Section(
         reveal: false,
         gradient: const LinearGradient(
-          colors: [Brand.tealDark, Brand.teal],
+          colors: [Brand.forestDark, Brand.green],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
         backdrop: const AnimatedBackdrop(
           intensity: 0.55,
-          colors: [Brand.aquaLight, Brand.amber],
+          colors: [Brand.sageLight, Brand.clay],
         ),
         child: Column(children: [
           Reveal(
             trigger: RevealTrigger.scroll,
             child: Text(title,
                 textAlign: TextAlign.center,
-                style: heading(30, color: Colors.white)),
+                style: heading(30, color: Color(0xFFF7F4EC))),
           ),
           const SizedBox(height: 22),
           Reveal(
             trigger: RevealTrigger.scroll,
             delay: const Duration(milliseconds: 140),
             child: FilledButton(
-                onPressed: () => go(context, path), child: Text(label)),
+                style: FilledButton.styleFrom(
+                    backgroundColor: Brand.clay,
+                    foregroundColor: Brand.ink),
+                onPressed: () => go(context, path),
+                child: Text(label)),
           ),
         ]),
       );
@@ -874,13 +879,13 @@ class StatTile extends StatelessWidget {
   const StatTile(this.value, this.label, {super.key});
   @override
   Widget build(BuildContext context) => HoverLift(
-        glow: Brand.amber,
+        glow: Brand.clay,
         cursorClick: false,
         child: Panel(
           color: Colors.white.withValues(alpha: 0.06),
           borderColor: Colors.white24,
           child: Column(children: [
-            AnimatedCount(value, style: heading(34, color: Brand.amber)),
+            AnimatedCount(value, style: heading(34, color: Brand.clay)),
             const SizedBox(height: 6),
             Text(label,
                 textAlign: TextAlign.center,
@@ -935,9 +940,9 @@ class JourneyStrip extends StatelessWidget {
               height: 2,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(colors: [
-                  Brand.aqua,
-                  Brand.amberDeep,
-                  Brand.aquaLight,
+                  Brand.green,
+                  Brand.clay,
+                  Brand.sage,
                 ]),
               ),
             ),
@@ -962,7 +967,7 @@ class _JourneyStep extends StatelessWidget {
   const _JourneyStep({required this.index, required this.step});
   @override
   Widget build(BuildContext context) => HoverLift(
-        glow: Brand.aqua,
+        glow: Brand.sage,
         cursorClick: false,
         child: Panel(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -972,7 +977,7 @@ class _JourneyStep extends StatelessWidget {
                 height: 44,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                      colors: [Brand.teal, Brand.tealLight],
+                      colors: [Brand.green, Brand.greenLight],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight),
                   shape: BoxShape.circle,
@@ -982,7 +987,7 @@ class _JourneyStep extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Text('0$index',
-                  style: heading(26, color: Brand.amberDeep)),
+                  style: heading(26, color: Brand.clayDeep)),
             ]),
             const SizedBox(height: 14),
             Text(step.$1, style: heading(18)),
@@ -998,11 +1003,14 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         width: double.infinity,
-        color: Brand.tealDark,
+        color: Brand.forestDark,
         child: Column(children: [
           Container(
-            height: 2,
-            color: Brand.aqua,
+            height: 3,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Brand.green, Brand.clay, Brand.sage]),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 20),
@@ -1013,7 +1021,7 @@ class Footer extends StatelessWidget {
                   trigger: RevealTrigger.scroll,
                   child: Column(children: [
                     Text('MT Alchemy',
-                        style: heading(26, color: Brand.amber)),
+                        style: heading(26, color: Brand.clay)),
                     const SizedBox(height: 8),
                     Text(
                         'Elevate your value: master human intelligence in a rapidly evolving AI-driven world.',

@@ -43,9 +43,9 @@ class _LearningHubPageState extends State<LearningHubPage> {
             ChoiceChip(
               label: const Text('All'),
               selected: _category == 'All',
-              selectedColor: Brand.aqua,
+              selectedColor: Brand.green,
               labelStyle: TextStyle(
-                  color: _category == 'All' ? Colors.white : Brand.teal,
+                  color: _category == 'All' ? Colors.white : Brand.green,
                   fontWeight: FontWeight.w600),
               onSelected: (_) => setState(() => _category = 'All'),
             ),
@@ -53,9 +53,9 @@ class _LearningHubPageState extends State<LearningHubPage> {
               ChoiceChip(
                 label: Text(c),
                 selected: _category == c,
-                selectedColor: Brand.aqua,
+                selectedColor: Brand.green,
                 labelStyle: TextStyle(
-                    color: _category == c ? Colors.white : Brand.teal,
+                    color: _category == c ? Colors.white : Brand.green,
                     fontWeight: FontWeight.w600),
                 onSelected: (_) => setState(() => _category = c),
               ),
@@ -82,16 +82,20 @@ class CourseDetailPage extends StatelessWidget {
         Section(
           vertical: 48,
           gradient: const LinearGradient(
-            colors: [Brand.tealDark, Brand.teal, Brand.aqua],
+            colors: [Brand.forestDark, Brand.greenDeep, Brand.green],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
+          ),
+          backdrop: const AnimatedBackdrop(
+            intensity: 0.5,
+            colors: [Brand.sageLight, Brand.clay],
           ),
           child: LayoutBuilder(builder: (context, box) {
             final wide = box.maxWidth >= 900;
             final info = Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Eyebrow(course.category, color: Brand.amber),
+                Eyebrow(course.category, color: Brand.sageLight),
                 const SizedBox(height: 14),
                 Text(course.title, style: heading(wide ? 40 : 30, color: Colors.white)),
                 const SizedBox(height: 12),
@@ -112,7 +116,7 @@ class CourseDetailPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('RM${course.price.toStringAsFixed(0)}',
-                      style: heading(30, color: Brand.teal)),
+                      style: heading(30, color: Brand.green)),
                   const SizedBox(height: 6),
                   Text('One-time purchase',
                       style: body(13, color: Brand.grey)),
@@ -178,7 +182,7 @@ class CourseDetailPage extends StatelessWidget {
                       child: Row(crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Icon(Icons.check_circle,
-                                size: 18, color: Brand.aqua),
+                                size: 18, color: Brand.sage),
                             const SizedBox(width: 8),
                             Expanded(child: Text(o, style: body(14))),
                           ]),
@@ -228,10 +232,10 @@ class CourseDetailPage extends StatelessWidget {
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-              color: Brand.aquaTint, borderRadius: BorderRadius.circular(8)),
+              color: Brand.sageTint, borderRadius: BorderRadius.circular(8)),
           alignment: Alignment.center,
           child: Text('$n',
-              style: body(13, color: Brand.teal, weight: FontWeight.w700)),
+              style: body(13, color: Brand.green, weight: FontWeight.w700)),
         ),
         const SizedBox(width: 14),
         Expanded(child: Text(c.title, style: body(14.5, weight: FontWeight.w600))),
@@ -310,9 +314,9 @@ class _CoursePlayerPageState extends State<CoursePlayerPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-                color: Brand.aquaTint, borderRadius: BorderRadius.circular(14)),
+                color: Brand.sageTint, borderRadius: BorderRadius.circular(14)),
             child: Text(item.type,
-                style: body(12, color: Brand.teal, weight: FontWeight.w700)),
+                style: body(12, color: Brand.green, weight: FontWeight.w700)),
           ),
         ]),
         const SizedBox(height: 16),
@@ -321,13 +325,13 @@ class _CoursePlayerPageState extends State<CoursePlayerPage> {
           height: 280,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Brand.teal,
+            color: Brand.green,
             borderRadius: BorderRadius.circular(14),
             image: DecorationImage(
                 image: AssetImage(widget.course.image),
                 fit: BoxFit.cover,
                 colorFilter: const ColorFilter.mode(
-                    Color(0x99062A33), BlendMode.darken)),
+                    Color(0x99172A20), BlendMode.darken)),
           ),
           alignment: Alignment.center,
           child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -339,7 +343,7 @@ class _CoursePlayerPageState extends State<CoursePlayerPage> {
                 _ => Icons.article,
               },
               size: 64,
-              color: Brand.amber,
+              color: Brand.clay,
             ),
             const SizedBox(height: 10),
             Text('$item.type content loads here',
@@ -351,7 +355,7 @@ class _CoursePlayerPageState extends State<CoursePlayerPage> {
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text('Course Progress', style: body(14, weight: FontWeight.w600)),
           Text('${(_progress * 100).round()}%',
-              style: body(14, color: Brand.teal, weight: FontWeight.w700)),
+              style: body(14, color: Brand.green, weight: FontWeight.w700)),
         ]),
         const SizedBox(height: 8),
         GradientProgressBar(value: _progress, height: 10),
@@ -485,7 +489,7 @@ class _QuizPageState extends State<QuizPage> {
                           contentPadding: EdgeInsets.zero,
                           dense: true,
                           value: opt,
-                          activeColor: Brand.aqua,
+                          activeColor: Brand.green,
                           title: Text(opt),
                         ),
                     ]),
@@ -496,7 +500,7 @@ class _QuizPageState extends State<QuizPage> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                        color: Brand.aquaTint,
+                        color: Brand.sageTint,
                         borderRadius: BorderRadius.circular(12)),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -559,17 +563,17 @@ class CertificatePage extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: Brand.amber, width: 3),
+                    border: Border.all(color: Brand.clay, width: 3),
                     boxShadow: const [
-                      BoxShadow(color: Color(0x1A0E4C5C), blurRadius: 30, offset: Offset(0, 12)),
+                      BoxShadow(color: Color(0x1A2A2A24), blurRadius: 30, offset: Offset(0, 12)),
                     ],
                   ),
                   padding: const EdgeInsets.all(36),
                   child: Column(children: [
-                    Text('MT Alchemy', style: heading(24, color: Brand.teal)),
+                    Text('MT Alchemy', style: heading(24, color: Brand.green)),
                     const SizedBox(height: 4),
                     Text('Certificate of Completion',
-                        style: body(14, color: Brand.teal, weight: FontWeight.w600)),
+                        style: body(14, color: Brand.green, weight: FontWeight.w600)),
                     const SizedBox(height: 28),
                     Text('Mabel Tan KH', style: heading(38)),
                     const SizedBox(height: 10),
@@ -597,7 +601,7 @@ class CertificatePage extends StatelessWidget {
                           border: Border.all(color: Brand.line),
                           borderRadius: BorderRadius.circular(10)),
                       child: Row(mainAxisSize: MainAxisSize.min, children: [
-                        const Icon(Icons.qr_code_2, size: 40, color: Brand.teal),
+                        const Icon(Icons.qr_code_2, size: 40, color: Brand.green),
                         const SizedBox(width: 10),
                         Text('Scan to verify', style: body(13, color: Brand.grey)),
                       ]),
@@ -641,7 +645,7 @@ Widget _bullet(String text) => Padding(
 Widget _meta(IconData icon, String text, {bool light = false}) => Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 16, color: light ? Brand.amber : Brand.aqua),
+        Icon(icon, size: 16, color: light ? Brand.clay : Brand.sage),
         const SizedBox(width: 6),
         Text(text, style: body(14, color: light ? Colors.white70 : Brand.grey)),
       ],

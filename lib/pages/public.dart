@@ -34,7 +34,7 @@ class AboutPage extends StatelessWidget {
           ]),
         ),
         Section(
-          color: Brand.aquaTint,
+          color: Brand.sageTint,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const SectionHeading('Our approach'),
@@ -69,7 +69,7 @@ class AboutPage extends StatelessWidget {
                     Text('Mabel Tan KH', style: heading(22)),
                     const SizedBox(height: 4),
                     Text('Founder | EQ Coach | HRDC Certified Trainer',
-                        style: body(14, color: Brand.teal, weight: FontWeight.w600)),
+                        style: body(14, color: Brand.green, weight: FontWeight.w600)),
                     const SizedBox(height: 10),
                     Text(
                         'Mabel founded MT Alchemy to bring a deeply human approach to people development, blending emotional intelligence, mindfulness and leadership coaching.',
@@ -110,7 +110,7 @@ class AboutPage extends StatelessWidget {
 
   static Widget _about(String title, IconData icon, String text) => Panel(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Icon(icon, color: Brand.aqua, size: 30),
+          Icon(icon, color: Brand.sage, size: 30),
           const SizedBox(height: 14),
           Text(title, style: heading(19)),
           const SizedBox(height: 8),
@@ -185,7 +185,7 @@ class CoachingPage extends StatelessWidget {
           ]),
         ),
         Section(
-          color: Brand.aquaTint,
+          color: Brand.sageTint,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const SectionHeading('How it works'),
@@ -205,7 +205,7 @@ class CoachingPage extends StatelessWidget {
 
   static Widget _focus(String title, IconData icon, String text) => Panel(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Icon(icon, color: Brand.aqua, size: 28),
+          Icon(icon, color: Brand.green, size: 28),
           const SizedBox(height: 14),
           Text(title, style: heading(18)),
           const SizedBox(height: 8),
@@ -231,10 +231,7 @@ class OrganisationsPage extends StatelessWidget {
             FilledButton(
                 onPressed: () => go(context, '/contact'),
                 child: const Text('Talk to MT Alchemy')),
-            OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.white54)),
+OutlinedButton(
                 onPressed: () => go(context, '/programmes'),
                 child: const Text('Browse Programmes')),
           ],
@@ -256,7 +253,7 @@ class OrganisationsPage extends StatelessWidget {
           ]),
         ),
         Section(
-          color: Brand.aquaTint,
+          color: Brand.sageTint,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             const SectionHeading('Our solutions'),
@@ -274,8 +271,8 @@ class OrganisationsPage extends StatelessWidget {
             width: 46,
             height: 46,
             decoration: BoxDecoration(
-                color: Brand.aquaTint, borderRadius: BorderRadius.circular(12)),
-            child: Icon(icon, color: Brand.aqua),
+                color: Brand.sageTint, borderRadius: BorderRadius.circular(12)),
+            child: Icon(icon, color: Brand.sage),
           ),
           const SizedBox(width: 14),
           Expanded(child: Text(title, style: heading(16))),
@@ -323,11 +320,11 @@ class ProgrammesPage extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                      color: Brand.aquaTint,
+                      color: Brand.sageTint,
                       borderRadius: BorderRadius.circular(6)),
                   child: Text('Corporate Programme',
                       style: body(11,
-                          color: Brand.aqua, weight: FontWeight.w700)),
+                          color: Brand.sage, weight: FontWeight.w700)),
                 ),
               ]),
               const SizedBox(height: 12),
@@ -358,7 +355,7 @@ class ProgrammesPage extends StatelessWidget {
             child: Column(children: [
               Text('From', style: body(13, color: Brand.grey)),
               Text('RM${c.price.toStringAsFixed(0)}',
-                  style: heading(26, color: Brand.teal)),
+                  style: heading(26, color: Brand.green)),
               const SizedBox(height: 6),
               Text('or Request Quote',
                   style: body(12, color: Brand.grey)),
@@ -381,7 +378,7 @@ class ProgrammesPage extends StatelessWidget {
   static Widget _meta(IconData icon, String label) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 15, color: Brand.aqua),
+          Icon(icon, size: 15, color: Brand.sage),
           const SizedBox(width: 5),
           Text(label, style: body(13, color: Brand.grey)),
         ],
@@ -409,7 +406,7 @@ class InsightsPage extends StatelessWidget {
             Wrap(spacing: 10, runSpacing: 10, children: [
               for (final c in insightCategories)
                 Chip(
-                    backgroundColor: Brand.aquaTint,
+                    backgroundColor: Brand.sageTint,
                     side: BorderSide.none,
                     label: Text(c)),
             ]),
@@ -437,23 +434,23 @@ class InsightsPage extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(
-                      color: Brand.amber,
+                      color: Brand.clay,
                       borderRadius: BorderRadius.circular(6)),
                   child: Text(a.type,
                       style: body(11,
-                          color: Brand.teal, weight: FontWeight.w700)),
+                          color: Brand.green, weight: FontWeight.w700)),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
                     child: Text(a.category,
-                        style: body(12, color: Brand.teal),
+                        style: body(12, color: Brand.green),
                         overflow: TextOverflow.ellipsis)),
               ]),
               const SizedBox(height: 12),
               Text(a.title, style: heading(17), maxLines: 2,
                   overflow: TextOverflow.ellipsis),
               const SizedBox(height: 10),
-              Text('Read more →', style: body(13, color: Brand.teal)),
+              Text('Read more →', style: body(13, color: Brand.green)),
             ]),
           ),
         ]),
@@ -507,9 +504,9 @@ class _ImpactPageState extends State<ImpactPage> {
               ChoiceChip(
                 label: Text(f),
                 selected: _filter == f,
-                selectedColor: Brand.aqua,
+                selectedColor: Brand.green,
                 labelStyle: TextStyle(
-                    color: _filter == f ? Colors.white : Brand.teal,
+                    color: _filter == f ? Colors.white : Brand.green,
                     fontWeight: FontWeight.w600),
                 onSelected: (_) => setState(() => _filter = f),
               ),
