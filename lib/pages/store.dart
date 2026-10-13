@@ -70,7 +70,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         child: LayoutBuilder(builder: (context, box) {
           final wide = box.maxWidth >= 860;
           final image = ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(14),
             child: Image.asset(p.image,
                 height: 420, width: double.infinity, fit: BoxFit.cover),
           );
@@ -81,7 +81,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: isDigital ? Brand.purple : Brand.deepBlue,
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text('${p.type} Product',
                     style: body(11, color: Colors.white, weight: FontWeight.w700)),

@@ -52,17 +52,15 @@ class _ShellState extends State<Shell> {
     final wide = MediaQuery.of(context).size.width >= 1000;
 
     return Scaffold(
-      // ---- Scaffold.floatingActionButton: the cart, with a pulse halo ----
+      // ---- Scaffold.floatingActionButton: the cart ----
       floatingActionButton: route == '/cart'
           ? null
-          : PulseHalo(
-              child: FloatingActionButton.extended(
-                onPressed: () => go(context, '/cart'),
-                backgroundColor: Brand.purple,
-                foregroundColor: Colors.white,
-                icon: const Icon(Icons.shopping_cart_outlined),
-                label: const Text('Cart'),
-              ),
+          : FloatingActionButton.extended(
+              onPressed: () => go(context, '/cart'),
+              backgroundColor: Brand.purple,
+              foregroundColor: Colors.white,
+              icon: const Icon(Icons.shopping_cart_outlined),
+              label: const Text('Cart'),
             ),
       appBar: widget.appBar ? _buildAppBar(context, route, wide) : null,
       drawer: widget.appBar && !wide ? _buildDrawer(context, route) : null,
@@ -129,8 +127,7 @@ class _ShellState extends State<Shell> {
                 ),
               ),
               child: AnimatedBackdrop(
-                particles: false,
-                intensity: 0.8,
+                intensity: 0.7,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -182,51 +179,25 @@ class _ShellState extends State<Shell> {
   }
 }
 
-/// The "MT" mark - spins gently and lifts on hover.
-class _LogoBadge extends StatefulWidget {
+/// The "MT" mark.
+class _LogoBadge extends StatelessWidget {
   const _LogoBadge();
   @override
-  State<_LogoBadge> createState() => _LogoBadgeState();
-}
-
-class _LogoBadgeState extends State<_LogoBadge> {
-  bool _hover = false;
-  @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hover = true),
-      onExit: (_) => setState(() => _hover = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 320),
-        curve: Curves.easeOutBack,
-        width: 38,
-        height: 38,
-        transformAlignment: Alignment.center,
-        transform: Matrix4.identity()
-          ..rotateZ(_hover ? 0.14 : 0)
-          ..scaleByDouble(
-              _hover ? 1.08 : 1.0, _hover ? 1.08 : 1.0, 1, 1),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Brand.softYellow, Brand.softYellowDeep],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: _hover
-              ? [
-                  BoxShadow(
-                      color: Brand.softYellow.withValues(alpha: 0.4),
-                      blurRadius: 16)
-                ]
-              : const [],
+    return Container(
+      width: 38,
+      height: 38,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Brand.softYellow, Brand.softYellowDeep],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        alignment: Alignment.center,
-        child: Text('MT',
-            style:
-                heading(16, color: Brand.deepBlue, weight: FontWeight.w700)),
+        borderRadius: BorderRadius.circular(9),
       ),
+      alignment: Alignment.center,
+      child:
+          Text('MT', style: heading(16, color: Brand.deepBlue, weight: FontWeight.w700)),
     );
   }
 }
@@ -271,10 +242,9 @@ class _NavLinkState extends State<_NavLink> {
             duration: const Duration(milliseconds: 220),
             curve: Curves.easeOutCubic,
             height: 2,
-            width: on ? 22 : 0,
+            width: on ? 20 : 0,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                  colors: [Brand.softYellow, Brand.purpleLight]),
+              color: Brand.softYellow,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -284,23 +254,18 @@ class _NavLinkState extends State<_NavLink> {
   }
 }
 
-/// Thin gradient bar that tracks reading progress down the page.
+/// Thin accent bar that tracks reading progress down the page.
 class _ScrollProgress extends StatelessWidget {
   final double value;
   const _ScrollProgress(this.value);
   @override
   Widget build(BuildContext context) => SizedBox(
-        height: 3,
+        height: 2,
         child: Align(
           alignment: Alignment.centerLeft,
           child: FractionallySizedBox(
             widthFactor: value.clamp(0.0, 1.0),
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Brand.softYellow, Brand.purple]),
-              ),
-            ),
+            child: Container(color: Brand.softYellow),
           ),
         ),
       );
@@ -328,7 +293,7 @@ class Section extends StatelessWidget {
     required this.child,
     this.color,
     this.gradient,
-    this.vertical = 72,
+    this.vertical = 84,
     this.maxWidth = 1180,
     this.padding,
     this.backdrop,
@@ -383,7 +348,7 @@ class Panel extends StatelessWidget {
     this.color = Colors.white,
     this.padding = const EdgeInsets.all(24),
     this.borderColor,
-    this.radius = 18,
+    this.radius = 14,
     this.onTap,
   });
 
@@ -486,35 +451,31 @@ class PageHero extends StatelessWidget {
     );
 
     return Section(
-      vertical: 64,
+      vertical: 72,
       reveal: false,
       gradient: const LinearGradient(
-        colors: [Brand.deepBlueDark, Brand.deepBlue, Brand.purple],
+        colors: [Brand.deepBlueDark, Brand.deepBlue],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ),
       backdrop: const AnimatedBackdrop(
-        colors: [Brand.purpleLight, Brand.softYellow, Brand.deepBlueLight],
+        intensity: 0.55,
+        colors: [Brand.purpleLight, Brand.softYellow],
       ),
       child: wide && image != null
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(flex: 3, child: text),
-                const SizedBox(width: 40),
+                const SizedBox(width: 44),
                 Expanded(
                   flex: 2,
                   child: Reveal(
                     delay: const Duration(milliseconds: 220),
                     duration: const Duration(milliseconds: 800),
-                    beginScale: 0.94,
+                    beginScale: 0.97,
                     offset: const Offset(0, 20),
-                    child: Tilt(
-                      child: Float(
-                        distance: 10,
-                        child: _HeroImage(image!),
-                      ),
-                    ),
+                    child: _HeroImage(image!),
                   ),
                 ),
               ],
@@ -529,14 +490,15 @@ class _HeroImage extends StatelessWidget {
   const _HeroImage(this.image);
   @override
   Widget build(BuildContext context) => Container(
-        height: 340,
+        height: 360,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.white24, width: 4),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+              color: Colors.white.withValues(alpha: 0.16), width: 1),
           image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
           boxShadow: const [
             BoxShadow(
-                color: Color(0x55101B31), blurRadius: 40, offset: Offset(0, 18)),
+                color: Color(0x40101B31), blurRadius: 34, offset: Offset(0, 16)),
           ],
         ),
       );
@@ -557,23 +519,17 @@ class ServiceCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 52,
-                height: 52,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [Brand.purple, Brand.purpleLight],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(14),
-                  boxShadow: const [
-                    BoxShadow(
-                        color: Color(0x336C4AB6),
-                        blurRadius: 14,
-                        offset: Offset(0, 6)),
-                  ],
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(item.icon, color: Colors.white),
+                child: Icon(item.icon, color: Colors.white, size: 22),
               ),
               const SizedBox(height: 16),
               Text(item.title, style: heading(19)),
@@ -585,7 +541,7 @@ class ServiceCard extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
                   color: Brand.mist,
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text('For: ${item.whoFor}',
                     style: body(12,
@@ -620,7 +576,7 @@ class CourseCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(18)),
+                    const BorderRadius.vertical(top: Radius.circular(14)),
                 child: HoverZoom(
                   child: Image.asset(course.image,
                       height: 150, width: double.infinity, fit: BoxFit.cover),
@@ -693,7 +649,7 @@ class ProductCard extends StatelessWidget {
               Stack(children: [
                 ClipRRect(
                   borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(18)),
+                      const BorderRadius.vertical(top: Radius.circular(14)),
                   child: HoverZoom(
                     child: Image.asset(product.image,
                         height: 160, width: double.infinity, fit: BoxFit.cover),
@@ -704,14 +660,12 @@ class ProductCard extends StatelessWidget {
                   left: 12,
                   child: Container(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: product.type == 'Digital'
-                            ? const [Brand.purple, Brand.purpleLight]
-                            : const [Brand.deepBlue, Brand.deepBlueLight],
-                      ),
-                      borderRadius: BorderRadius.circular(30),
+                      color: product.type == 'Digital'
+                          ? Brand.purple
+                          : Brand.deepBlue,
+                      borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(product.type,
                         style: body(11,
@@ -759,7 +713,7 @@ class StoryCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(18)),
+                    const BorderRadius.vertical(top: Radius.circular(14)),
                 child: HoverZoom(
                   child: Image.asset(story.image,
                       height: 170, width: double.infinity, fit: BoxFit.cover),
@@ -773,10 +727,10 @@ class StoryCard extends StatelessWidget {
                     Row(children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
+                            horizontal: 9, vertical: 4),
                         decoration: BoxDecoration(
                             color: Brand.softYellow,
-                            borderRadius: BorderRadius.circular(30)),
+                            borderRadius: BorderRadius.circular(6)),
                         child: Text(story.clientType,
                             style: body(11,
                                 color: Brand.deepBlue,
@@ -885,20 +839,20 @@ class CtaBand extends StatelessWidget {
   Widget build(BuildContext context) => Section(
         reveal: false,
         gradient: const LinearGradient(
-          colors: [Brand.deepBlue, Brand.purple],
+          colors: [Brand.deepBlueDark, Brand.deepBlue],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ),
         backdrop: const AnimatedBackdrop(
-          particles: false,
-          intensity: 0.9,
+          intensity: 0.55,
           colors: [Brand.purpleLight, Brand.softYellow],
         ),
         child: Column(children: [
           Reveal(
             trigger: RevealTrigger.scroll,
-            child: GradientText(title,
-                style: heading(30), textAlign: TextAlign.center),
+            child: Text(title,
+                textAlign: TextAlign.center,
+                style: heading(30, color: Colors.white)),
           ),
           const SizedBox(height: 22),
           Reveal(
@@ -943,8 +897,10 @@ class JourneyStrip extends StatelessWidget {
       ('Discover', 'Listen to your people, culture and goals.', Icons.search),
       ('Design', 'Shape a human-centred programme around them.',
           Icons.architecture),
-      ('Deliver', 'Facilitate with energy, evidence and care.', Icons.rocket_launch),
-      ('Sustain', 'Embed habits that keep the change alive.', Icons.eco),
+      ('Deliver', 'Facilitate with energy, evidence and care.',
+          Icons.handshake_outlined),
+      ('Sustain', 'Embed habits that keep the change alive.',
+          Icons.trending_up),
     ],
   });
 
@@ -1042,14 +998,8 @@ class Footer extends StatelessWidget {
         color: Brand.deepBlueDark,
         child: Column(children: [
           Container(
-            height: 3,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                Brand.purple,
-                Brand.softYellow,
-                Brand.purpleLight,
-              ]),
-            ),
+            height: 2,
+            color: Brand.purple,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 20),

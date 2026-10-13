@@ -238,7 +238,7 @@ class CourseDetailPage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-              color: Brand.mist, borderRadius: BorderRadius.circular(20)),
+              color: Brand.mist, borderRadius: BorderRadius.circular(14)),
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             Icon(icon, size: 14, color: Brand.grey),
             const SizedBox(width: 4),
@@ -274,7 +274,7 @@ class _CoursePlayerPageState extends State<CoursePlayerPage> {
       width: wide ? 300 : double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: Brand.line),
       ),
       padding: const EdgeInsets.all(16),
@@ -310,7 +310,7 @@ class _CoursePlayerPageState extends State<CoursePlayerPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-                color: Brand.lavender, borderRadius: BorderRadius.circular(20)),
+                color: Brand.lavender, borderRadius: BorderRadius.circular(14)),
             child: Text(item.type,
                 style: body(12, color: Brand.purple, weight: FontWeight.w700)),
           ),
@@ -558,7 +558,7 @@ class CertificatePage extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: Brand.softYellow, width: 3),
                     boxShadow: const [
                       BoxShadow(color: Color(0x1A1B2A4A), blurRadius: 30, offset: Offset(0, 12)),

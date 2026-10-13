@@ -27,7 +27,7 @@ class _Dashboard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Brand.deepBlue,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,7 +341,7 @@ class EmployerDashboardPage extends StatelessWidget {
                   color: e.$5 == 'Completed'
                       ? Brand.success.withValues(alpha: 0.14)
                       : Brand.softYellow.withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(14),
                 ),
                 child: Text(e.$5,
                     style: body(11.5,

@@ -324,7 +324,7 @@ class ProgrammesPage extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                       color: Brand.lavender,
-                      borderRadius: BorderRadius.circular(30)),
+                      borderRadius: BorderRadius.circular(6)),
                   child: Text('Corporate Programme',
                       style: body(11,
                           color: Brand.purple, weight: FontWeight.w700)),
@@ -425,7 +425,7 @@ class InsightsPage extends StatelessWidget {
         padding: EdgeInsets.zero,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
             child: Image.asset(a.image,
                 height: 150, width: double.infinity, fit: BoxFit.cover),
           ),
@@ -438,7 +438,7 @@ class InsightsPage extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(
                       color: Brand.softYellow,
-                      borderRadius: BorderRadius.circular(30)),
+                      borderRadius: BorderRadius.circular(6)),
                   child: Text(a.type,
                       style: body(11,
                           color: Brand.deepBlue, weight: FontWeight.w700)),

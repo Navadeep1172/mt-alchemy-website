@@ -27,7 +27,7 @@ const allRoutes = <NavItem>[
   NavItem('/', 'Home', Icons.home_outlined),
   NavItem('/about', 'About', Icons.info_outline),
   NavItem('/services', 'Services', Icons.design_services_outlined),
-  NavItem('/coaching', 'Individual Coaching', Icons.self_improvement),
+  NavItem('/coaching', 'Individual Coaching', Icons.person_search_outlined),
   NavItem('/organisations', 'Organisations', Icons.apartment_outlined),
   NavItem('/programmes', 'Corporate Programmes', Icons.card_membership_outlined),
   NavItem('/upskilling', 'Learning Hub', Icons.school_outlined),

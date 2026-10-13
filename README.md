@@ -65,19 +65,20 @@ flutter test
 
 The interface is deliberately animated; every effect lives in `lib/motion.dart`.
 
+The motion is deliberately restrained so the site reads as a professional
+consultancy rather than a demo reel:
+
 | Effect | Where it appears |
 | --- | --- |
 | `Reveal` – scroll-triggered fade + rise with stagger | every `Section`, `CardGrid` child and `SectionHeading` |
-| `HoverLift` / `HoverZoom` | course, product, story, service cards, stats, testimonials |
-| `Tilt` + `Float` | hero imagery (pointer tilt + gentle drift) |
-| `AnimatedBackdrop` – drifting aurora blobs + particle constellation | every hero and CTA band |
-| `Marquee` – keyword ticker | home page |
+| `HoverLift` / `HoverZoom` – faint lift, slow image zoom | course, product, story, service cards, stats |
+| `AnimatedBackdrop` – softly drifting aurora wash | hero bands, CTA band, drawer header |
+| `Marquee` – slow capability ticker | home page |
 | `AnimatedCount` | impact figure and dashboard KPIs |
-| `GradientText` – sweeping sheen | hero and CTA headings |
+| `GradientText` – faint white-to-warm sheen | hero heading |
 | `GradientProgressBar` | course and dashboard progress |
-| `PulseHalo` | floating cart button |
-| `fadeSlideRoute` | page transition for every route |
-| scroll-progress bar, animated nav underline, tilting logo | `Shell` |
+| `fadeSlideRoute` – gentle fade + rise | page transition for every route |
+| reading-progress accent bar, nav underline | `Shell` |
 
 All looping motion honours the OS "reduce motion" accessibility setting
 (`MediaQuery.disableAnimations`). `test/pages_test.dart` mutes tickers with

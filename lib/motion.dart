@@ -8,19 +8,16 @@ import 'theme.dart';
 /// Motion system for MT Alchemy
 /// ---------------------------------------------------------------------------
 /// All animation used across the prototype lives here so the visual language
-/// stays consistent:
+/// stays consistent and deliberately restrained:
 ///
 ///  * [Reveal]              - fade + rise entrance, optionally scroll-triggered
-///  * [HoverLift]           - pointer-reactive lift + glow for cards/buttons
+///  * [HoverLift]           - faint pointer-reactive lift for cards
 ///  * [HoverZoom]           - slow image zoom for media inside cards
-///  * [Tilt]                - 3D pointer tilt for feature imagery
-///  * [Float]               - gentle endless vertical drift
-///  * [AnimatedBackdrop]    - drifting aurora blobs (+ optional particles)
-///  * [Marquee]             - endless keyword ticker
+///  * [AnimatedBackdrop]    - softly drifting aurora wash behind dark panels
+///  * [Marquee]             - slow capability ticker on the home page
 ///  * [AnimatedCount]       - numbers that count up when they appear
-///  * [GradientText]        - slowly sweeping gradient sheen on headings
+///  * [GradientText]        - faint sweeping sheen on hero headings
 ///  * [GradientProgressBar] - progress that fills itself
-///  * [PulseHalo]           - expanding halo behind the cart FAB
 ///  * [fadeSlideRoute]      - the shared page transition
 ///
 /// Every looping animation respects the OS "reduce motion" setting
@@ -146,7 +143,7 @@ class _RevealState extends State<Reveal>
   }
 }
 
-/// Pointer-reactive lift: raises, scales and glows while hovered.
+/// Pointer-reactive lift: a quiet raise and soft shadow while hovered.
 class HoverLift extends StatefulWidget {
   final Widget child;
   final double lift;
@@ -157,9 +154,9 @@ class HoverLift extends StatefulWidget {
   const HoverLift({
     super.key,
     required this.child,
-    this.lift = 8,
-    this.scale = 1.015,
-    this.radius = 18,
+    this.lift = 5,
+    this.scale = 1.008,
+    this.radius = 14,
     this.glow = Brand.purple,
     this.cursorClick = true,
   });
@@ -189,9 +186,9 @@ class _HoverLiftState extends State<HoverLift> {
           boxShadow: _hover
               ? [
                   BoxShadow(
-                    color: widget.glow.withValues(alpha: 0.24),
-                    blurRadius: 36,
-                    offset: const Offset(0, 18),
+                    color: widget.glow.withValues(alpha: 0.14),
+                    blurRadius: 26,
+                    offset: const Offset(0, 12),
                   ),
                 ]
               : const [],
@@ -211,7 +208,7 @@ class _HoverLiftState extends State<HoverLift> {
 class HoverZoom extends StatefulWidget {
   final Widget child;
   final double scale;
-  const HoverZoom({super.key, required this.child, this.scale = 1.07});
+  const HoverZoom({super.key, required this.child, this.scale = 1.04});
 
   @override
   State<HoverZoom> createState() => _HoverZoomState();
@@ -228,7 +225,7 @@ class _HoverZoomState extends State<HoverZoom> {
       child: ClipRect(
         child: AnimatedScale(
           scale: _hover ? widget.scale : 1,
-          duration: const Duration(milliseconds: 520),
+          duration: const Duration(milliseconds: 700),
           curve: Curves.easeOutCubic,
           child: widget.child,
         ),
@@ -237,113 +234,15 @@ class _HoverZoomState extends State<HoverZoom> {
   }
 }
 
-/// 3D tilt that follows the pointer.
-class Tilt extends StatefulWidget {
-  final Widget child;
-  final double maxTilt;
-  const Tilt({super.key, required this.child, this.maxTilt = 0.07});
-
-  @override
-  State<Tilt> createState() => _TiltState();
-}
-
-class _TiltState extends State<Tilt> {
-  Offset _p = Offset.zero;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onHover: (event) {
-        final box = context.findRenderObject() as RenderBox?;
-        if (box == null || !box.hasSize) return;
-        final local = box.globalToLocal(event.position);
-        setState(() {
-          _p = Offset(
-            (local.dx / box.size.width * 2 - 1).clamp(-1.0, 1.0),
-            (local.dy / box.size.height * 2 - 1).clamp(-1.0, 1.0),
-          );
-        });
-      },
-      onExit: (_) => setState(() => _p = Offset.zero),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOut,
-        transformAlignment: Alignment.center,
-        transform: Matrix4.identity()
-          ..setEntry(3, 2, 0.0012)
-          ..rotateX(-_p.dy * widget.maxTilt)
-          ..rotateY(_p.dx * widget.maxTilt),
-        child: widget.child,
-      ),
-    );
-  }
-}
-
-/// Gentle endless vertical drift (used for hero imagery).
-class Float extends StatefulWidget {
-  final Widget child;
-  final double distance;
-  final Duration period;
-  const Float({
-    super.key,
-    required this.child,
-    this.distance = 10,
-    this.period = const Duration(seconds: 5),
-  });
-
-  @override
-  State<Float> createState() => _FloatState();
-}
-
-class _FloatState extends State<Float> with SingleTickerProviderStateMixin {
-  late final AnimationController _controller =
-      AnimationController(vsync: this, duration: widget.period);
-  bool _started = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_started) return;
-    _started = true;
-    if (!(MediaQuery.maybeDisableAnimationsOf(context) ?? false)) {
-      _controller.repeat();
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) {
-      return widget.child;
-    }
-    return AnimatedBuilder(
-      animation: _controller,
-      child: widget.child,
-      builder: (context, child) => Transform.translate(
-        offset: Offset(
-            0, math.sin(_controller.value * 2 * math.pi) * widget.distance),
-        child: child,
-      ),
-    );
-  }
-}
-
-/// Drifting aurora blobs with an optional particle constellation. Painted
-/// behind its child (or filling its parent when no child is given).
+/// Softly drifting colour wash behind dark panels. Painted behind its child
+/// (or filling its parent when no child is given).
 class AnimatedBackdrop extends StatefulWidget {
   final Widget? child;
-  final bool particles;
   final double intensity;
   final List<Color> colors;
   const AnimatedBackdrop({
     super.key,
     this.child,
-    this.particles = true,
     this.intensity = 1,
     this.colors = const [
       Brand.purple,
@@ -387,7 +286,6 @@ class _AnimatedBackdropState extends State<AnimatedBackdrop>
         painter: _BackdropPainter(
           t: _controller,
           colors: widget.colors,
-          particles: widget.particles,
           intensity: widget.intensity,
         ),
         child: widget.child,
@@ -399,13 +297,11 @@ class _AnimatedBackdropState extends State<AnimatedBackdrop>
 class _BackdropPainter extends CustomPainter {
   final Animation<double> t;
   final List<Color> colors;
-  final bool particles;
   final double intensity;
 
   _BackdropPainter({
     required this.t,
     required this.colors,
-    required this.particles,
     required this.intensity,
   }) : super(repaint: t);
 
@@ -425,48 +321,16 @@ class _BackdropPainter extends CustomPainter {
       final paint = Paint()
         ..shader = RadialGradient(
           colors: [
-            colors[i].withValues(alpha: 0.34 * intensity),
+            colors[i].withValues(alpha: 0.22 * intensity),
             colors[i].withValues(alpha: 0.0),
           ],
         ).createShader(Rect.fromCircle(center: center, radius: radius));
       canvas.drawCircle(center, radius, paint);
     }
-
-    if (particles) {
-      final rnd = math.Random(7);
-      final points = <Offset>[];
-      for (var i = 0; i < 26; i++) {
-        final bx = rnd.nextDouble(), by = rnd.nextDouble();
-        final amp = 6 + rnd.nextDouble() * 16;
-        final speed = 0.4 + rnd.nextDouble() * 0.8;
-        final ph = rnd.nextDouble() * math.pi * 2;
-        points.add(Offset(
-          w * bx + math.sin(v * 2 * math.pi * speed + ph) * amp,
-          h * by + math.cos(v * 2 * math.pi * speed * 0.9 + ph) * amp,
-        ));
-      }
-
-      final linePaint = Paint()
-        ..strokeWidth = 1
-        ..color = Colors.white.withValues(alpha: 0.06 * intensity);
-      final dotPaint = Paint()
-        ..color = const Color(0xFFFFF3C4).withValues(alpha: 0.30 * intensity);
-
-      const link = 110.0;
-      for (var i = 0; i < points.length; i++) {
-        for (var j = i + 1; j < points.length; j++) {
-          if ((points[i] - points[j]).distance < link) {
-            canvas.drawLine(points[i], points[j], linePaint);
-          }
-        }
-        canvas.drawCircle(points[i], 1.6, dotPaint);
-      }
-    }
   }
 
   @override
-  bool shouldRepaint(covariant _BackdropPainter old) =>
-      old.t != t || old.particles != particles;
+  bool shouldRepaint(covariant _BackdropPainter old) => old.t != t;
 }
 
 /// Endless horizontal ticker for keyword / value strips.
@@ -482,9 +346,9 @@ class Marquee extends StatefulWidget {
     super.key,
     required this.items,
     this.separator,
-    this.speed = 42,
-    this.gap = 44,
-    this.padding = const EdgeInsets.symmetric(vertical: 16),
+    this.speed = 26,
+    this.gap = 32,
+    this.padding = const EdgeInsets.symmetric(vertical: 14),
     this.pauseOnHover = true,
   });
 
@@ -648,8 +512,8 @@ class GradientText extends StatefulWidget {
     this.text, {
     super.key,
     required this.style,
-    this.colors = const [Colors.white, Brand.softYellow, Colors.white],
-    this.period = const Duration(seconds: 6),
+    this.colors = const [Colors.white, Color(0xFFFFEDC2), Colors.white],
+    this.period = const Duration(seconds: 9),
     this.textAlign,
   });
 
@@ -774,81 +638,6 @@ class _GradientProgressBarState extends State<GradientProgressBar>
       ),
     );
   }
-}
-
-/// Expanding halo drawn behind a child (used for the floating cart button).
-class PulseHalo extends StatefulWidget {
-  final Widget child;
-  final Color color;
-  const PulseHalo({super.key, required this.child, this.color = Brand.purple});
-
-  @override
-  State<PulseHalo> createState() => _PulseHaloState();
-}
-
-class _PulseHaloState extends State<PulseHalo>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 2600));
-  bool _started = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_started) return;
-    _started = true;
-    if (!(MediaQuery.maybeDisableAnimationsOf(context) ?? false)) {
-      _controller.repeat();
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return RepaintBoundary(
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
-        children: [
-          Positioned.fill(
-            child: CustomPaint(
-              painter: _HaloPainter(t: _controller, color: widget.color),
-            ),
-          ),
-          widget.child,
-        ],
-      ),
-    );
-  }
-}
-
-class _HaloPainter extends CustomPainter {
-  final Animation<double> t;
-  final Color color;
-  _HaloPainter({required this.t, required this.color}) : super(repaint: t);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = size.center(Offset.zero);
-    final maxR = size.shortestSide * 0.85;
-    for (var i = 0; i < 2; i++) {
-      final v = (t.value + i * 0.5) % 1.0;
-      final radius = maxR * (0.6 + v * 0.5);
-      final paint = Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2
-        ..color = color.withValues(alpha: (1 - v) * 0.35);
-      canvas.drawCircle(center, radius, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _HaloPainter old) => old.t != t;
 }
 
 /// The shared page transition: fade + rise + tiny scale.

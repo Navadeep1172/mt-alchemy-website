@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
         actions: [
           FilledButton.icon(
             onPressed: () => go(context, '/coaching'),
-            icon: const Icon(Icons.self_improvement),
+            icon: const Icon(Icons.person_outline),
             label: const Text("I'm an Individual"),
           ),
           OutlinedButton.icon(
@@ -35,13 +35,20 @@ class HomePage extends StatelessWidget {
         ],
       ),
 
-      // ---- Animated keyword ticker ----
+      // ---- Capability ticker ----
       Container(
         width: double.infinity,
         color: Brand.deepBlueDark,
         child: Marquee(
-          separator: const Icon(Icons.auto_awesome,
-              size: 15, color: Brand.softYellowDeep),
+          gap: 28,
+          separator: Container(
+            width: 4,
+            height: 4,
+            decoration: const BoxDecoration(
+              color: Color(0x66FFD166),
+              shape: BoxShape.circle,
+            ),
+          ),
           items: [
             for (final k in const [
               'Emotional Intelligence',
@@ -53,7 +60,10 @@ class HomePage extends StatelessWidget {
               'Keynotes',
               'Facilitation',
             ])
-              Text(k, style: heading(20, color: Colors.white)),
+              Text(k.toUpperCase(),
+                  style: body(12.5,
+                          color: Colors.white70, weight: FontWeight.w600)
+                      .copyWith(letterSpacing: 1.8)),
           ],
         ),
       ),
@@ -129,7 +139,7 @@ class HomePage extends StatelessWidget {
             ],
           );
           final image = ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(14),
             child: Image.asset(Img.banner,
                 height: wide ? 300 : 200, width: double.infinity, fit: BoxFit.cover),
           );
@@ -198,7 +208,7 @@ class HomePage extends StatelessWidget {
                         Text('“${t.$1}”',
                             style: body(15, color: Colors.white, height: 1.6)),
                         const SizedBox(height: 14),
-                        Text('- ${t.$2}',
+                        Text('— ${t.$2}',
                             style: body(13, color: Brand.softYellow)),
                       ],
                     ),

@@ -74,14 +74,14 @@ ThemeData buildTheme() {
         }),
         foregroundColor: const WidgetStatePropertyAll(Brand.deepBlue),
         padding: const WidgetStatePropertyAll(
-            EdgeInsets.symmetric(horizontal: 26, vertical: 20)),
+            EdgeInsets.symmetric(horizontal: 24, vertical: 18)),
         shape: WidgetStatePropertyAll(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(40))),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
         textStyle: const WidgetStatePropertyAll(
             TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
         elevation: WidgetStateProperty.resolveWith((states) =>
-            states.contains(WidgetState.hovered) ? 9 : 0),
-        shadowColor: const WidgetStatePropertyAll(Brand.softYellowDeep),
+            states.contains(WidgetState.hovered) ? 2 : 0),
+        shadowColor: const WidgetStatePropertyAll(Color(0x33101B31)),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
@@ -101,9 +101,9 @@ ThemeData buildTheme() {
                 : Brand.deepBlue,
             width: states.contains(WidgetState.hovered) ? 1.8 : 1.4)),
         padding: const WidgetStatePropertyAll(
-            EdgeInsets.symmetric(horizontal: 26, vertical: 20)),
+            EdgeInsets.symmetric(horizontal: 24, vertical: 18)),
         shape: WidgetStatePropertyAll(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(40))),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
         textStyle: const WidgetStatePropertyAll(
             TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
       ),
@@ -122,9 +122,9 @@ ThemeData buildTheme() {
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: Brand.purple,
       foregroundColor: Colors.white,
-      elevation: 4,
-      focusElevation: 8,
-      hoverElevation: 10,
+      elevation: 3,
+      focusElevation: 5,
+      hoverElevation: 6,
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
@@ -147,7 +147,7 @@ ThemeData buildTheme() {
       elevation: 0,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(14),
           side: const BorderSide(color: Brand.line)),
     ),
     chipTheme: base.chipTheme.copyWith(
