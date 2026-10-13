@@ -38,14 +38,14 @@ class HomePage extends StatelessWidget {
       // ---- Capability ticker ----
       Container(
         width: double.infinity,
-        color: Brand.deepBlueDark,
+        color: Brand.tealDark,
         child: Marquee(
           gap: 28,
           separator: Container(
             width: 4,
             height: 4,
             decoration: const BoxDecoration(
-              color: Color(0x66FFD166),
+              color: Color(0x66E8A33D),
               shape: BoxShape.circle,
             ),
           ),
@@ -95,7 +95,7 @@ class HomePage extends StatelessWidget {
 
       // ---- Upskilling ----
       Section(
-        color: Brand.lavender,
+        color: Brand.aquaTint,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -123,7 +123,7 @@ class HomePage extends StatelessWidget {
           final content = Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Eyebrow('Corporate solutions', color: Brand.purple),
+              const Eyebrow('Corporate solutions', color: Brand.aqua),
               const SizedBox(height: 14),
               Text('Develop your people. Strengthen your organization.',
                   style: heading(30)),
@@ -178,12 +178,12 @@ class HomePage extends StatelessWidget {
       // ---- Impact + testimonials ----
       Section(
         gradient: const LinearGradient(
-          colors: [Brand.deepBlue, Brand.purple],
+          colors: [Brand.teal, Brand.aqua],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         child: Column(children: [
-          const Eyebrow('Our impact'),
+          const Eyebrow('Our impact', color: Brand.amber),
           const SizedBox(height: 16),
           AnimatedCount('1,100+', style: heading(64, color: Colors.white)),
           Text('participants impacted across corporate, education, youth, NGO and community work.',
@@ -195,7 +195,7 @@ class HomePage extends StatelessWidget {
             children: [
               for (final t in testimonials)
                 HoverLift(
-                  glow: Brand.softYellow,
+                  glow: Brand.amber,
                   cursorClick: false,
                   child: Panel(
                     color: Colors.white.withValues(alpha: 0.08),
@@ -203,13 +203,13 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.format_quote, color: Brand.softYellow),
+                        const Icon(Icons.format_quote, color: Brand.amber),
                         const SizedBox(height: 12),
                         Text('“${t.$1}”',
                             style: body(15, color: Colors.white, height: 1.6)),
                         const SizedBox(height: 14),
                         Text('— ${t.$2}',
-                            style: body(13, color: Brand.softYellow)),
+                            style: body(13, color: Brand.amber)),
                       ],
                     ),
                   ),

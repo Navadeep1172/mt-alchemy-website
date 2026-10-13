@@ -117,5 +117,8 @@ assets/images/     31 extracted brand images
 
 ## Brand
 
-Deep Blue `#1B2A4A` · Soft Yellow `#FFD166` · Purple `#6C4AB6`, defined in
-`lib/theme.dart` (`Brand`, `buildTheme()`).
+Deep Teal `#0E4C5C` · Teal ink `#062A33` · Aqua `#3C9AAB` · Amber `#E8A33D`,
+defined in `lib/theme.dart` (`Brand`, `buildTheme()`). Teal carries the
+consultancy voice, amber marks actions, and aqua is reserved for progress and
+secondary detail. Small text colours were chosen to keep AA contrast on their
+backgrounds.

@@ -157,7 +157,7 @@ class HoverLift extends StatefulWidget {
     this.lift = 5,
     this.scale = 1.008,
     this.radius = 14,
-    this.glow = Brand.purple,
+    this.glow = Brand.aqua,
     this.cursorClick = true,
   });
 
@@ -245,9 +245,9 @@ class AnimatedBackdrop extends StatefulWidget {
     this.child,
     this.intensity = 1,
     this.colors = const [
-      Brand.purple,
-      Brand.deepBlueLight,
-      Brand.softYellow,
+      Brand.aqua,
+      Brand.tealLight,
+      Brand.amber,
     ],
   });
 
@@ -512,7 +512,7 @@ class GradientText extends StatefulWidget {
     this.text, {
     super.key,
     required this.style,
-    this.colors = const [Colors.white, Color(0xFFFFEDC2), Colors.white],
+    this.colors = const [Colors.white, Color(0xFFFFE8C7), Colors.white],
     this.period = const Duration(seconds: 9),
     this.textAlign,
   });
@@ -575,7 +575,7 @@ class GradientProgressBar extends StatefulWidget {
     required this.value,
     this.height = 8,
     this.track = Brand.mist,
-    this.colors = const [Brand.purple, Brand.purpleLight],
+    this.colors = const [Brand.aqua, Brand.aquaLight],
   });
 
   @override

@@ -33,9 +33,9 @@ class _StorePageState extends State<StorePage> {
               ChoiceChip(
                 label: Text(f),
                 selected: _filter == f,
-                selectedColor: Brand.purple,
+                selectedColor: Brand.aqua,
                 labelStyle: TextStyle(
-                    color: _filter == f ? Colors.white : Brand.deepBlue,
+                    color: _filter == f ? Colors.white : Brand.teal,
                     fontWeight: FontWeight.w600),
                 onSelected: (_) => setState(() => _filter = f),
               ),
@@ -80,7 +80,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: isDigital ? Brand.purple : Brand.deepBlue,
+                  color: isDigital ? Brand.aqua : Brand.teal,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text('${p.type} Product',
@@ -94,7 +94,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               Text(p.description, style: body(16, color: Brand.grey)),
               const SizedBox(height: 22),
               Text('RM${p.price.toStringAsFixed(0)}',
-                  style: heading(30, color: Brand.deepBlue)),
+                  style: heading(30, color: Brand.teal)),
               const SizedBox(height: 8),
               if (isDigital)
                 _info(Icons.cloud_download_outlined, 'Instant download after purchase')
@@ -174,7 +174,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   static Widget _info(IconData icon, String text) => Padding(
         padding: const EdgeInsets.only(bottom: 4),
         child: Row(children: [
-          Icon(icon, size: 18, color: Brand.purple),
+          Icon(icon, size: 18, color: Brand.aqua),
           const SizedBox(width: 8),
           Expanded(child: Text(text, style: body(14, color: Brand.grey))),
         ]),
@@ -262,7 +262,7 @@ class CartPage extends StatelessWidget {
               ]),
             ),
             Text('RM${p.price.toStringAsFixed(0)}',
-                style: heading(18, color: Brand.deepBlue)),
+                style: heading(18, color: Brand.teal)),
           ]),
         ),
       );
@@ -346,7 +346,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     Panel(
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                         Row(children: [
-                          const Icon(Icons.local_shipping_outlined, color: Brand.purple),
+                          const Icon(Icons.local_shipping_outlined, color: Brand.aqua),
                           const SizedBox(width: 8),
                           Expanded(
                               child: Text('Shipping address',
@@ -373,7 +373,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               contentPadding: EdgeInsets.zero,
                               dense: true,
                               value: m,
-                              activeColor: Brand.purple,
+                              activeColor: Brand.aqua,
                               title: Text(m),
                             ),
                         ]),
@@ -450,7 +450,7 @@ class OrderConfirmationPage extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 12),
         child: Row(children: [
           Icon(type == 'Digital' ? Icons.cloud_download_outlined : Icons.local_shipping_outlined,
-              color: Brand.purple),
+              color: Brand.aqua),
           const SizedBox(width: 12),
           Expanded(child: Text(name, style: body(14.5, weight: FontWeight.w600))),
           TextButton(
@@ -482,7 +482,7 @@ class MyOrdersPage extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
                   headingTextStyle:
-                      body(13, color: Brand.deepBlue, weight: FontWeight.w700),
+                      body(13, color: Brand.teal, weight: FontWeight.w700),
                   dataTextStyle: body(13),
                   columns: const [
                     DataColumn(label: Text('Order')),
@@ -548,9 +548,9 @@ class DigitalLibraryPage extends StatelessWidget {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                          color: Brand.lavender,
+                          color: Brand.aquaTint,
                           borderRadius: BorderRadius.circular(12)),
-                      child: const Icon(Icons.description_outlined, color: Brand.purple),
+                      child: const Icon(Icons.description_outlined, color: Brand.aqua),
                     ),
                     const SizedBox(width: 12),
                     Expanded(child: Text(p.name, style: heading(16))),

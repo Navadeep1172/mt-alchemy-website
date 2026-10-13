@@ -1,27 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// MT Alchemy brand palette.
-/// Visual direction required by the brief: Deep Blue, Soft Yellow and Purple.
+/// MT Alchemy brand palette: deep teal with a warm amber accent.
+/// Teal carries authority and calm (the consultancy voice); amber marks the
+/// moments that need action; luminous aqua is reserved for progress and
+/// secondary detail so the palette never feels busy.
 class Brand {
-  static const deepBlue = Color(0xFF1B2A4A);
-  static const deepBlueDark = Color(0xFF101B31);
-  static const deepBlueLight = Color(0xFF2E4470);
-  static const softYellow = Color(0xFFFFD166);
-  static const softYellowDeep = Color(0xFFF2B705);
-  static const purple = Color(0xFF6C4AB6);
-  static const purpleLight = Color(0xFF9B7EDE);
-  static const lavender = Color(0xFFF4F1FB);
-  static const mist = Color(0xFFF7F8FC);
-  static const ink = Color(0xFF1F2430);
-  static const grey = Color(0xFF5C6470);
-  static const line = Color(0xFFE3E6EF);
+  /// Deepest teal - footers, app bar, app-level ink.
+  static const tealDark = Color(0xFF062A33);
+
+  /// Primary brand colour - headings, primary surfaces.
+  static const teal = Color(0xFF0E4C5C);
+
+  /// Lighter teal for gradients and supporting surfaces.
+  static const tealLight = Color(0xFF1E7585);
+
+  /// Accent amber - calls to action and the alchemy spark.
+  static const amber = Color(0xFFE8A33D);
+
+  /// Deeper amber for hover states.
+  static const amberDeep = Color(0xFFC4841D);
+
+  /// Secondary accent - luminous aqua for progress and detail.
+  static const aqua = Color(0xFF3C9AAB);
+  static const aquaLight = Color(0xFF7FC7D1);
+
+  /// Pale aqua wash for tinted panels.
+  static const aquaTint = Color(0xFFEAF4F6);
+
+  static const mist = Color(0xFFF6F9FA);
+  static const ink = Color(0xFF1D2429);
+  static const grey = Color(0xFF5B6871);
+  static const line = Color(0xFFE1E8EA);
   static const success = Color(0xFF2E9E6B);
 }
 
 /// Headings use a warm serif so the platform feels human-centred, not corporate-cold.
 TextStyle heading(double size,
-        {Color color = Brand.deepBlue,
+        {Color color = Brand.teal,
         FontWeight weight = FontWeight.w600,
         double height = 1.15}) =>
     GoogleFonts.fraunces(
@@ -37,10 +53,10 @@ TextStyle body(double size,
 
 ThemeData buildTheme() {
   final scheme = ColorScheme.fromSeed(
-    seedColor: Brand.deepBlue,
-    primary: Brand.deepBlue,
-    secondary: Brand.softYellow,
-    tertiary: Brand.purple,
+    seedColor: Brand.teal,
+    primary: Brand.teal,
+    secondary: Brand.amber,
+    tertiary: Brand.aqua,
     surface: Colors.white,
   );
 
@@ -52,9 +68,9 @@ ThemeData buildTheme() {
 
   return base.copyWith(
     textTheme: GoogleFonts.interTextTheme(base.textTheme)
-        .apply(bodyColor: Brand.ink, displayColor: Brand.deepBlue),
+        .apply(bodyColor: Brand.ink, displayColor: Brand.teal),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Brand.deepBlue,
+      backgroundColor: Brand.teal,
       foregroundColor: Colors.white,
       elevation: 0,
       centerTitle: false,
@@ -67,12 +83,12 @@ ThemeData buildTheme() {
         backgroundColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.hovered) ||
               states.contains(WidgetState.focused)) {
-            return Brand.softYellowDeep;
+            return Brand.amberDeep;
           }
-          if (states.contains(WidgetState.pressed)) return Brand.softYellow;
-          return Brand.softYellow;
+          if (states.contains(WidgetState.pressed)) return Brand.amber;
+          return Brand.amber;
         }),
-        foregroundColor: const WidgetStatePropertyAll(Brand.deepBlue),
+        foregroundColor: const WidgetStatePropertyAll(Brand.tealDark),
         padding: const WidgetStatePropertyAll(
             EdgeInsets.symmetric(horizontal: 24, vertical: 18)),
         shape: WidgetStatePropertyAll(
@@ -81,7 +97,7 @@ ThemeData buildTheme() {
             TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
         elevation: WidgetStateProperty.resolveWith((states) =>
             states.contains(WidgetState.hovered) ? 2 : 0),
-        shadowColor: const WidgetStatePropertyAll(Color(0x33101B31)),
+        shadowColor: const WidgetStatePropertyAll(Color(0x33062A33)),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
@@ -89,16 +105,16 @@ ThemeData buildTheme() {
         animationDuration: const Duration(milliseconds: 200),
         foregroundColor: WidgetStateProperty.resolveWith((states) =>
             states.contains(WidgetState.hovered)
-                ? Brand.purple
-                : Brand.deepBlue),
+                ? Brand.aqua
+                : Brand.teal),
         backgroundColor: WidgetStateProperty.resolveWith((states) =>
             states.contains(WidgetState.hovered)
-                ? Brand.lavender
+                ? Brand.aquaTint
                 : Colors.transparent),
         side: WidgetStateProperty.resolveWith((states) => BorderSide(
             color: states.contains(WidgetState.hovered)
-                ? Brand.purple
-                : Brand.deepBlue,
+                ? Brand.aqua
+                : Brand.teal,
             width: states.contains(WidgetState.hovered) ? 1.8 : 1.4)),
         padding: const WidgetStatePropertyAll(
             EdgeInsets.symmetric(horizontal: 24, vertical: 18)),
@@ -113,14 +129,14 @@ ThemeData buildTheme() {
         animationDuration: const Duration(milliseconds: 180),
         foregroundColor: WidgetStateProperty.resolveWith((states) =>
             states.contains(WidgetState.hovered)
-                ? Brand.purple
-                : Brand.deepBlue),
+                ? Brand.aqua
+                : Brand.teal),
         textStyle: const WidgetStatePropertyAll(
             TextStyle(fontWeight: FontWeight.w600, fontSize: 14.5)),
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: Brand.purple,
+      backgroundColor: Brand.teal,
       foregroundColor: Colors.white,
       elevation: 3,
       focusElevation: 5,
@@ -139,7 +155,7 @@ ThemeData buildTheme() {
           borderSide: const BorderSide(color: Brand.line)),
       focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Brand.purple, width: 1.8)),
+          borderSide: const BorderSide(color: Brand.aqua, width: 1.8)),
       labelStyle: const TextStyle(color: Brand.grey),
     ),
     cardTheme: CardThemeData(
@@ -152,7 +168,7 @@ ThemeData buildTheme() {
     ),
     chipTheme: base.chipTheme.copyWith(
       labelStyle: const TextStyle(
-          color: Brand.deepBlue, fontWeight: FontWeight.w600),
+          color: Brand.teal, fontWeight: FontWeight.w600),
     ),
   );
 }
