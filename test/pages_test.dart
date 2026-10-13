@@ -50,7 +50,10 @@ void main() {
         addTearDown(tester.view.resetPhysicalSize);
         addTearDown(tester.view.resetDevicePixelRatio);
 
-        await tester.pumpWidget(const MtAlchemyApp());
+        // Tickers are muted so the endless ambient animations do not prevent
+        // pumpAndSettle from settling; layout is identical either way.
+        await tester.pumpWidget(
+            const TickerMode(enabled: false, child: MtAlchemyApp()));
         await tester.pumpAndSettle();
         final nav = tester.state<NavigatorState>(find.byType(Navigator));
         nav.pushNamed(route);

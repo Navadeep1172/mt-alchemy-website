@@ -59,25 +59,72 @@ ThemeData buildTheme() {
       elevation: 0,
       centerTitle: false,
     ),
+    // Buttons animate their colour, elevation and border on hover/focus so
+    // every interaction in the prototype gives live feedback.
     filledButtonTheme: FilledButtonThemeData(
-      style: FilledButton.styleFrom(
-        backgroundColor: Brand.softYellow,
-        foregroundColor: Brand.deepBlue,
-        padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 20),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-        textStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+      style: ButtonStyle(
+        animationDuration: const Duration(milliseconds: 200),
+        backgroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.hovered) ||
+              states.contains(WidgetState.focused)) {
+            return Brand.softYellowDeep;
+          }
+          if (states.contains(WidgetState.pressed)) return Brand.softYellow;
+          return Brand.softYellow;
+        }),
+        foregroundColor: const WidgetStatePropertyAll(Brand.deepBlue),
+        padding: const WidgetStatePropertyAll(
+            EdgeInsets.symmetric(horizontal: 26, vertical: 20)),
+        shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(40))),
+        textStyle: const WidgetStatePropertyAll(
+            TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+        elevation: WidgetStateProperty.resolveWith((states) =>
+            states.contains(WidgetState.hovered) ? 9 : 0),
+        shadowColor: const WidgetStatePropertyAll(Brand.softYellowDeep),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: OutlinedButton.styleFrom(
-        foregroundColor: Brand.deepBlue,
-        side: const BorderSide(color: Brand.deepBlue, width: 1.4),
-        padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 20),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-        textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+      style: ButtonStyle(
+        animationDuration: const Duration(milliseconds: 200),
+        foregroundColor: WidgetStateProperty.resolveWith((states) =>
+            states.contains(WidgetState.hovered)
+                ? Brand.purple
+                : Brand.deepBlue),
+        backgroundColor: WidgetStateProperty.resolveWith((states) =>
+            states.contains(WidgetState.hovered)
+                ? Brand.lavender
+                : Colors.transparent),
+        side: WidgetStateProperty.resolveWith((states) => BorderSide(
+            color: states.contains(WidgetState.hovered)
+                ? Brand.purple
+                : Brand.deepBlue,
+            width: states.contains(WidgetState.hovered) ? 1.8 : 1.4)),
+        padding: const WidgetStatePropertyAll(
+            EdgeInsets.symmetric(horizontal: 26, vertical: 20)),
+        shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(40))),
+        textStyle: const WidgetStatePropertyAll(
+            TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
       ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        animationDuration: const Duration(milliseconds: 180),
+        foregroundColor: WidgetStateProperty.resolveWith((states) =>
+            states.contains(WidgetState.hovered)
+                ? Brand.purple
+                : Brand.deepBlue),
+        textStyle: const WidgetStatePropertyAll(
+            TextStyle(fontWeight: FontWeight.w600, fontSize: 14.5)),
+      ),
+    ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: Brand.purple,
+      foregroundColor: Colors.white,
+      elevation: 4,
+      focusElevation: 8,
+      hoverElevation: 10,
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,

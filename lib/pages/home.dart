@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data.dart';
+import '../motion.dart';
 import '../theme.dart';
 import '../widgets.dart';
 
@@ -34,6 +35,29 @@ class HomePage extends StatelessWidget {
         ],
       ),
 
+      // ---- Animated keyword ticker ----
+      Container(
+        width: double.infinity,
+        color: Brand.deepBlueDark,
+        child: Marquee(
+          separator: const Icon(Icons.auto_awesome,
+              size: 15, color: Brand.softYellowDeep),
+          items: [
+            for (final k in const [
+              'Emotional Intelligence',
+              'Leadership Development',
+              'Team Engagement',
+              'Workplace Well-being',
+              'Executive Coaching',
+              'Assessments',
+              'Keynotes',
+              'Facilitation',
+            ])
+              Text(k, style: heading(20, color: Colors.white)),
+          ],
+        ),
+      ),
+
       // ---- What we do ----
       Section(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -44,6 +68,18 @@ class HomePage extends StatelessWidget {
           CardGrid(
             children: [for (final s in services) ServiceCard(s)],
           ),
+        ]),
+      ),
+
+      // ---- Transformation pathway ----
+      Section(
+        color: Brand.mist,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const SectionHeading('How we work',
+              intro:
+                  'A four-step transformation pathway - the alchemy behind every engagement.'),
+          const SizedBox(height: 28),
+          const JourneyStrip(),
         ]),
       ),
 
@@ -139,7 +175,7 @@ class HomePage extends StatelessWidget {
         child: Column(children: [
           const Eyebrow('Our impact'),
           const SizedBox(height: 16),
-          Text('1,100+', style: heading(64, color: Colors.white)),
+          AnimatedCount('1,100+', style: heading(64, color: Colors.white)),
           Text('participants impacted across corporate, education, youth, NGO and community work.',
               textAlign: TextAlign.center,
               style: body(16, color: Colors.white70)),
@@ -148,20 +184,24 @@ class HomePage extends StatelessWidget {
             minWidth: 300,
             children: [
               for (final t in testimonials)
-                Panel(
-                  color: Colors.white.withValues(alpha: 0.08),
-                  borderColor: Colors.white24,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(Icons.format_quote, color: Brand.softYellow),
-                      const SizedBox(height: 12),
-                      Text('“${t.$1}”',
-                          style: body(15, color: Colors.white, height: 1.6)),
-                      const SizedBox(height: 14),
-                      Text('- ${t.$2}',
-                          style: body(13, color: Brand.softYellow)),
-                    ],
+                HoverLift(
+                  glow: Brand.softYellow,
+                  cursorClick: false,
+                  child: Panel(
+                    color: Colors.white.withValues(alpha: 0.08),
+                    borderColor: Colors.white24,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(Icons.format_quote, color: Brand.softYellow),
+                        const SizedBox(height: 12),
+                        Text('“${t.$1}”',
+                            style: body(15, color: Colors.white, height: 1.6)),
+                        const SizedBox(height: 14),
+                        Text('- ${t.$2}',
+                            style: body(13, color: Brand.softYellow)),
+                      ],
+                    ),
                   ),
                 ),
             ],

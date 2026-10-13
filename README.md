@@ -57,16 +57,41 @@ flutter test
 | **Container** | `Section` (full-width band + `ConstrainedBox` max width) and `Panel` (rounded, bordered card) in `lib/widgets.dart`; both are `Container`s used across all pages. |
 | **Form** | Login / Register (`lib/pages/auth.dart`) and Contact (`lib/pages/contact.dart`) use `Form`, `TextFormField`, validators and `GlobalKey<FormState>`. |
 | **RadioList** | Account-type selection (`lib/pages/auth.dart`), payment / shipping choice (`lib/pages/store.dart`) and quiz answering (`lib/pages/learning.dart`) use `RadioGroup` + `RadioListTile`. |
-| **Routes** | `MaterialApp.routes` named routes in `lib/main.dart` (21 static routes). |
+| **Routes** | Named routes in `lib/main.dart` (`routeBuilders` map, 21 static routes). |
 | **Navigator** | `onGenerateRoute` in `lib/main.dart` for argument-carrying routes (`/course`, `/player`, `/quiz`, `/certificate`, `/product`) and `Navigator.pushNamed` throughout (`go()` helper in `lib/widgets.dart`). |
 | **Images / visuals** | 31 brand JPEGs in `assets/images/`, wired through `Img` lists in `lib/data.dart` and rendered with `Image.asset`. |
+
+## Motion & interaction design
+
+The interface is deliberately animated; every effect lives in `lib/motion.dart`.
+
+| Effect | Where it appears |
+| --- | --- |
+| `Reveal` – scroll-triggered fade + rise with stagger | every `Section`, `CardGrid` child and `SectionHeading` |
+| `HoverLift` / `HoverZoom` | course, product, story, service cards, stats, testimonials |
+| `Tilt` + `Float` | hero imagery (pointer tilt + gentle drift) |
+| `AnimatedBackdrop` – drifting aurora blobs + particle constellation | every hero and CTA band |
+| `Marquee` – keyword ticker | home page |
+| `AnimatedCount` | impact figure and dashboard KPIs |
+| `GradientText` – sweeping sheen | hero and CTA headings |
+| `GradientProgressBar` | course and dashboard progress |
+| `PulseHalo` | floating cart button |
+| `fadeSlideRoute` | page transition for every route |
+| scroll-progress bar, animated nav underline, tilting logo | `Shell` |
+
+All looping motion honours the OS "reduce motion" accessibility setting
+(`MediaQuery.disableAnimations`). `test/pages_test.dart` mutes tickers with
+`TickerMode(enabled: false)` for deterministic layout assertions across every
+route and breakpoint, while `test/animation_test.dart` runs the animations with
+fixed pumps to prove they never throw.
 
 ## Project structure
 
 ```
 lib/
-  main.dart        MaterialApp, named routes, onGenerateRoute
-  theme.dart       Brand palette + typography (heading/body helpers)
+  main.dart        MaterialApp, named routes, onGenerateRoute + transitions
+  theme.dart       Brand palette, typography, animated button styles
+  motion.dart      Animation system (reveal, hover, aurora, marquee, count…)
   data.dart        Models + content seed data (courses, products, stories…)
   widgets.dart     Shell/Scaffold, Section/Container, Panel, cards, nav helper
   pages/

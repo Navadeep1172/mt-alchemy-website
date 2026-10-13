@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data.dart';
+import '../motion.dart';
 import '../theme.dart';
 import '../widgets.dart';
 
@@ -37,22 +38,27 @@ class _Dashboard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           for (var i = 0; i < nav.length; i++)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: Material(
-                color: i == 0
-                    ? Colors.white.withValues(alpha: 0.12)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(10),
-                child: ListTile(
-                  dense: true,
-                  leading: Icon(nav[i].icon,
-                      size: 20,
-                      color: i == 0 ? Brand.softYellow : Colors.white70),
-                  title: Text(nav[i].label,
-                      style: body(14,
-                          color: Colors.white,
-                          weight: i == 0 ? FontWeight.w700 : FontWeight.w400)),
+            Reveal(
+              delay: Duration(milliseconds: i * 40),
+              offset: const Offset(24, 0),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Material(
+                  color: i == 0
+                      ? Colors.white.withValues(alpha: 0.12)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                  child: ListTile(
+                    dense: true,
+                    leading: Icon(nav[i].icon,
+                        size: 20,
+                        color: i == 0 ? Brand.softYellow : Colors.white70),
+                    title: Text(nav[i].label,
+                        style: body(14,
+                            color: Colors.white,
+                            weight:
+                                i == 0 ? FontWeight.w700 : FontWeight.w400)),
+                  ),
                 ),
               ),
             ),
@@ -85,24 +91,29 @@ class _Stat extends StatelessWidget {
   final Color color;
   const _Stat(this.value, this.label, this.icon, this.color);
   @override
-  Widget build(BuildContext context) => Panel(
-        child: Row(children: [
-          Container(
-            width: 46,
-            height: 46,
-            decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(12)),
-            child: Icon(icon, color: color),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(value, style: heading(22)),
-              Text(label, style: body(12.5, color: Brand.grey)),
-            ]),
-          ),
-        ]),
+  Widget build(BuildContext context) => HoverLift(
+        glow: color,
+        cursorClick: false,
+        child: Panel(
+          child: Row(children: [
+            Container(
+              width: 46,
+              height: 46,
+              decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12)),
+              child: Icon(icon, color: color),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child:
+                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                AnimatedCount(value, style: heading(22)),
+                Text(label, style: body(12.5, color: Brand.grey)),
+              ]),
+            ),
+          ]),
+        ),
       );
 }
 
@@ -187,14 +198,7 @@ class LearnerDashboardPage extends StatelessWidget {
                   style: body(13, color: Brand.purple, weight: FontWeight.w700)),
             ]),
             const SizedBox(height: 6),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: const LinearProgressIndicator(
-                  value: progress,
-                  minHeight: 8,
-                  backgroundColor: Brand.mist,
-                  color: Brand.purple),
-            ),
+            const GradientProgressBar(value: progress, height: 8),
           ]),
         ),
         const SizedBox(width: 14),
@@ -290,14 +294,7 @@ class EmployerDashboardPage extends StatelessWidget {
                           style: body(13, color: Brand.purple)),
                     ]),
                     const SizedBox(height: 6),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: LinearProgressIndicator(
-                          value: d.$2,
-                          minHeight: 8,
-                          backgroundColor: Brand.mist,
-                          color: Brand.purple),
-                    ),
+                    GradientProgressBar(value: d.$2, height: 8),
                   ]),
                 ),
             ]),
@@ -333,16 +330,7 @@ class EmployerDashboardPage extends StatelessWidget {
               DataCell(SizedBox(
                 width: 120,
                 child: Row(children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: LinearProgressIndicator(
-                          value: e.$4,
-                          minHeight: 6,
-                          backgroundColor: Brand.mist,
-                          color: Brand.purple),
-                    ),
-                  ),
+                  Expanded(child: GradientProgressBar(value: e.$4, height: 6)),
                   const SizedBox(width: 8),
                   Text('${(e.$4 * 100).round()}%'),
                 ]),

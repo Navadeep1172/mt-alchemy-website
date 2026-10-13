@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data.dart';
+import '../motion.dart';
 import '../theme.dart';
 import '../widgets.dart';
 
@@ -353,14 +354,7 @@ class _CoursePlayerPageState extends State<CoursePlayerPage> {
               style: body(14, color: Brand.purple, weight: FontWeight.w700)),
         ]),
         const SizedBox(height: 8),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: LinearProgressIndicator(
-              value: _progress,
-              minHeight: 10,
-              backgroundColor: Brand.mist,
-              color: Brand.purple),
-        ),
+        GradientProgressBar(value: _progress, height: 10),
         const SizedBox(height: 20),
         // Previous / Mark Complete / Next
         Wrap(spacing: 12, runSpacing: 12, children: [
