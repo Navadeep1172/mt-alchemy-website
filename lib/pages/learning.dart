@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import '../app_state.dart';
 import '../data.dart';
 import '../motion.dart';
+import '../session.dart';
 import '../theme.dart';
 import '../widgets.dart';
 
@@ -18,9 +20,10 @@ class _LearningHubPageState extends State<LearningHubPage> {
 
   @override
   Widget build(BuildContext context) {
+    final all = app.publishedCourses;
     final list = _category == 'All'
-        ? courses
-        : courses.where((c) => c.category == _category).toList();
+        ? all
+        : all.where((c) => c.category == _category).toList();
 
     return Shell(children: [
       PageHero(
@@ -78,7 +81,14 @@ class CourseDetailPage extends StatelessWidget {
   final Course course;
 
   @override
-  Widget build(BuildContext context) => Shell(children: [
+  Widget build(BuildContext context) => ListenableBuilder(
+        listenable: app,
+        builder: (context, _) => _build(context),
+      );
+
+  Widget _build(BuildContext context) {
+    final enrolled = app.isEnrolled(course.id);
+    return Shell(children: [
         Section(
           vertical: 48,
           gradient: const LinearGradient(
@@ -124,17 +134,20 @@ class CourseDetailPage extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton(
-                      onPressed: () =>
-                          Navigator.pushNamed(context, '/player', arguments: course),
-                      child: const Text('Enrol Now'),
+                      onPressed: () {
+                        app.enrol(course);
+                        Navigator.pushNamed(context, '/player',
+                            arguments: course);
+                      },
+                      child: Text(enrolled ? 'Continue Learning' : 'Enrol Now'),
                     ),
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
-                      onPressed: () => go(context, '/cart'),
-                      child: const Text('Add to Cart'),
+                      onPressed: () => go(context, '/upskilling'),
+                      child: const Text('Browse more courses'),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -211,6 +224,7 @@ class CourseDetailPage extends StatelessWidget {
           }),
         ),
       ]);
+  }
 
   static Widget _curriculumTile(int n, CurriculumItem c) {
     final icon = switch (c.type) {
@@ -266,8 +280,21 @@ class CoursePlayerPage extends StatefulWidget {
 
 class _CoursePlayerPageState extends State<CoursePlayerPage> {
   int _index = 0;
-  double _progress = 0.65; // 65% as required by the brief
-  final Set<int> _completed = {0, 1, 2};
+  late double _progress;
+  late final Set<int> _completed;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) app.enrol(widget.course);
+    });
+    _progress = app.progressFor(widget.course.id);
+    final done =
+        (_progress * widget.course.curriculum.length).floor().clamp(0,
+            widget.course.curriculum.length);
+    _completed = {for (var i = 0; i < done; i++) i};
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -374,8 +401,12 @@ class _CoursePlayerPageState extends State<CoursePlayerPage> {
                 _progress = (_index + 2) / widget.course.curriculum.length;
                 if (_progress > 1) _progress = 1;
               });
+              app.setProgress(widget.course, _progress);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Lesson marked complete')),
+                SnackBar(
+                    content: Text(_progress >= 1
+                        ? 'Course completed - certificate issued'
+                        : 'Lesson marked complete')),
               );
             },
             icon: const Icon(Icons.check),
@@ -430,6 +461,65 @@ class _CoursePlayerPageState extends State<CoursePlayerPage> {
 /// ---------------------------------------------------------------------------
 /// Quiz / Assessment
 /// ---------------------------------------------------------------------------
+/// Supports the four question types required by the brief: single-answer
+/// multiple choice, true/false, multiple-answer and short answer. After
+/// submitting it shows the score, the correct answers and an explanation for
+/// each question, with a retake option.
+enum QuizType { single, boolean, multiple, short }
+
+class QuizQuestion {
+  final String prompt;
+  final QuizType type;
+  final List<String> options;
+  final List<String> correct;
+  final String explanation;
+  const QuizQuestion({
+    required this.prompt,
+    required this.type,
+    this.options = const [],
+    required this.correct,
+    required this.explanation,
+  });
+}
+
+const _quizQuestions = <QuizQuestion>[
+  QuizQuestion(
+    prompt: 'Which pillar of EQ helps you manage impulses?',
+    type: QuizType.single,
+    options: ['Self-regulation', 'Empathy', 'Motivation', 'Social skills'],
+    correct: ['Self-regulation'],
+    explanation:
+        'Self-regulation is the ability to control impulses and manage your emotions.',
+  ),
+  QuizQuestion(
+    prompt: 'Mindfulness improves attention and reduces stress.',
+    type: QuizType.boolean,
+    options: ['True', 'False'],
+    correct: ['True'],
+    explanation:
+        'Mindfulness training reliably improves attentional control and lowers stress.',
+  ),
+  QuizQuestion(
+    prompt: 'Select every active-listening behaviour.',
+    type: QuizType.multiple,
+    options: [
+      'Fully focusing on the speaker',
+      'Interrupting to save time',
+      'Reflecting back what you heard',
+      'Checking your phone',
+    ],
+    correct: ['Fully focusing on the speaker', 'Reflecting back what you heard'],
+    explanation:
+        'Active listening means full attention and reflecting back; interrupting and multitasking break it.',
+  ),
+  QuizQuestion(
+    prompt: 'Name the EQ skill of understanding how others feel.',
+    type: QuizType.short,
+    correct: ['empathy'],
+    explanation: 'Empathy is the ability to sense and understand others\' emotions.',
+  ),
+];
+
 class QuizPage extends StatefulWidget {
   const QuizPage({super.key, required this.course});
   final Course course;
@@ -438,95 +528,120 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  static const questions = [
-    ('Which pillar of EQ helps you manage impulses?', ['Self-regulation', 'Empathy', 'Motivation', 'Social skills']),
-    ('Mindfulness primarily improves...', ['Attention', 'Salary', 'Office design', 'Deadlines']),
-    ('Active listening means...', ['Interrupting', 'Fully focusing on the speaker', 'Multitasking', 'Taking notes only']),
-  ];
-  final Map<int, String> _answers = {};
+  final Map<int, Set<String>> _selected = {};
+  final Map<int, String> _short = {};
   bool _submitted = false;
   int _score = 0;
 
-  void _submit() {
-    var s = 0;
-    for (var i = 0; i < questions.length; i++) {
-      if (_answers[i] == questions[i].$2[0]) s++;
+  String? _single(int i) {
+    final s = _selected[i];
+    if (s == null || s.isEmpty) return null;
+    return s.first;
+  }
+
+  bool _isCorrect(int i) {
+    final q = _quizQuestions[i];
+    if (q.type == QuizType.short) {
+      final given = (_short[i] ?? '').trim().toLowerCase();
+      return q.correct.any((c) => c.toLowerCase() == given) && given.isNotEmpty;
     }
+    final picked = _selected[i] ?? <String>{};
+    return picked.length == q.correct.length &&
+        picked.containsAll(q.correct);
+  }
+
+  void _submit() {
     setState(() {
-      _score = s;
+      _score = [
+        for (var i = 0; i < _quizQuestions.length; i++)
+          if (_isCorrect(i)) i,
+      ].length;
       _submitted = true;
     });
+    if (_score / _quizQuestions.length >= 0.6) {
+      app.completeCourse(widget.course);
+    }
   }
+
+  void _retake() => setState(() {
+        _submitted = false;
+        _selected.clear();
+        _short.clear();
+        _score = 0;
+      });
 
   @override
   Widget build(BuildContext context) {
-    final pct = ((_score / questions.length) * 100).round();
+    final total = _quizQuestions.length;
+    final pct = ((_score / total) * 100).round();
     return Shell(children: [
       Section(
         color: Brand.mist,
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 720),
+            constraints: const BoxConstraints(maxWidth: 760),
             child: Panel(
               padding: const EdgeInsets.all(28),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Knowledge Check', style: heading(24)),
+                Row(children: [
+                  Expanded(
+                      child: Text('Knowledge Check', style: heading(24))),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                        color: Brand.sageTint,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Text('$total questions',
+                        style:
+                            body(12, color: Brand.green, weight: FontWeight.w700)),
+                  ),
+                ]),
                 const SizedBox(height: 4),
                 Text(widget.course.title, style: body(14, color: Brand.grey)),
-                const SizedBox(height: 20),
-                for (var i = 0; i < questions.length; i++) ...[
-                  Text('Q${i + 1}. ${questions[i].$1}',
-                      style: body(16, weight: FontWeight.w600)),
-                  const SizedBox(height: 8),
-                  RadioGroup<String>(
-                    groupValue: _answers[i],
-                    onChanged: (v) {
-                      if (!_submitted) setState(() => _answers[i] = v!);
-                    },
-                    child: Column(children: [
-                      for (final opt in questions[i].$2)
-                        RadioListTile<String>(
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
-                          value: opt,
-                          activeColor: Brand.green,
-                          title: Text(opt),
-                        ),
-                    ]),
-                  ),
-                  const SizedBox(height: 8),
+                const SizedBox(height: 22),
+                for (var i = 0; i < total; i++) ...[
+                  _question(context, i),
+                  const SizedBox(height: 18),
                 ],
                 if (_submitted)
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(18),
                     decoration: BoxDecoration(
                         color: Brand.sageTint,
                         borderRadius: BorderRadius.circular(12)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Score: $_score / ${questions.length}',
-                            style: heading(20)),
-                        Text('$pct% correct',
-                            style: body(14, color: Brand.grey)),
-                      ],
-                    ),
+                    child: Row(children: [
+                      Icon(
+                          pct >= 60
+                              ? Icons.check_circle
+                              : Icons.error_outline,
+                          color: pct >= 60 ? Brand.success : Brand.clayDeep,
+                          size: 34),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Score: $_score / $total',
+                                style: heading(20)),
+                            Text(
+                                '$pct% correct · ${pct >= 60 ? 'Passed' : 'Try again'}',
+                                style: body(14, color: Brand.grey)),
+                          ],
+                        ),
+                      ),
+                    ]),
                   ),
                 const SizedBox(height: 20),
                 Wrap(spacing: 12, runSpacing: 12, children: [
                   FilledButton(
-                    onPressed: _submitted
-                        ? () => setState(() {
-                              _submitted = false;
-                              _answers.clear();
-                              _score = 0;
-                            })
-                        : _submit,
+                    onPressed: _submitted ? _retake : _submit,
                     child: Text(_submitted ? 'Retake Assessment' : 'Submit'),
                   ),
                   if (_submitted)
                     OutlinedButton(
-                      onPressed: () => Navigator.pushNamed(context, '/certificate',
+                      onPressed: () => Navigator.pushNamed(
+                          context, '/certificate',
                           arguments: widget.course),
                       child: const Text('View Certificate'),
                     ),
@@ -537,6 +652,124 @@ class _QuizPageState extends State<QuizPage> {
         ),
       ),
     ]);
+  }
+
+  Widget _question(BuildContext context, int i) {
+    final q = _quizQuestions[i];
+    final correct = _submitted && _isCorrect(i);
+    return Panel(
+      padding: const EdgeInsets.all(18),
+      radius: 12,
+      borderColor: _submitted
+          ? (correct ? Brand.success : Brand.clayDeep)
+          : Brand.line,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(children: [
+          Expanded(
+            child: Text('Q${i + 1}. ${q.prompt}',
+                style: body(16, weight: FontWeight.w600)),
+          ),
+          Text(
+              switch (q.type) {
+                QuizType.single => 'Single choice',
+                QuizType.boolean => 'True / False',
+                QuizType.multiple => 'Multiple answer',
+                QuizType.short => 'Short answer',
+              },
+              style: body(11, color: Brand.grey)),
+        ]),
+        const SizedBox(height: 12),
+        if (q.type == QuizType.short)
+          TextFormField(
+            enabled: !_submitted,
+            decoration: const InputDecoration(
+                hintText: 'Type your answer',
+                prefixIcon: Icon(Icons.edit_outlined)),
+            onChanged: (v) => _short[i] = v,
+          )
+        else if (q.type == QuizType.boolean)
+          RadioGroup<String>(
+            groupValue: _single(i),
+            onChanged: (v) {
+              if (!_submitted) setState(() => _selected[i] = {v!});
+            },
+            child: Column(children: [
+              for (final opt in q.options)
+                RadioListTile<String>(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  value: opt,
+                  activeColor: Brand.green,
+                  title: Text(opt),
+                ),
+            ]),
+          )
+        else if (q.type == QuizType.multiple)
+          Column(children: [
+            for (final opt in q.options)
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                controlAffinity: ListTileControlAffinity.leading,
+                activeColor: Brand.green,
+                value: (_selected[i] ?? <String>{}).contains(opt),
+                title: Text(opt),
+                onChanged: _submitted
+                    ? null
+                    : (v) => setState(() {
+                          final set = _selected.putIfAbsent(i, () => <String>{});
+                          if (v == true) {
+                            set.add(opt);
+                          } else {
+                            set.remove(opt);
+                          }
+                        }),
+              ),
+          ])
+        else
+          RadioGroup<String>(
+            groupValue: _single(i),
+            onChanged: (v) {
+              if (!_submitted) setState(() => _selected[i] = {v!});
+            },
+            child: Column(children: [
+              for (final opt in q.options)
+                RadioListTile<String>(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  value: opt,
+                  activeColor: Brand.green,
+                  title: Text(opt),
+                ),
+            ]),
+          ),
+        if (_submitted) ...[
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: (correct ? Brand.success : Brand.clay)
+                  .withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    correct
+                        ? 'Correct'
+                        : 'Correct answer: ${q.correct.join(", ")}',
+                    style: body(13,
+                        weight: FontWeight.w700,
+                        color: correct ? Brand.success : Brand.green)),
+                const SizedBox(height: 4),
+                Text(q.explanation, style: body(13, color: Brand.grey)),
+              ],
+            ),
+          ),
+        ],
+      ]),
+    );
   }
 }
 
@@ -575,7 +808,8 @@ class CertificatePage extends StatelessWidget {
                     Text('Certificate of Completion',
                         style: body(14, color: Brand.green, weight: FontWeight.w600)),
                     const SizedBox(height: 28),
-                    Text('Mabel Tan KH', style: heading(38)),
+                    Text(session.value?.name ?? 'Guest Learner',
+                        textAlign: TextAlign.center, style: heading(38)),
                     const SizedBox(height: 10),
                     Text('has successfully completed',
                         style: body(14, color: Brand.grey)),
@@ -588,9 +822,11 @@ class CertificatePage extends StatelessWidget {
                       spacing: 24,
                       runSpacing: 16,
                       children: [
-                        _field('Completion Date', '13 Oct 2026'),
+                        _field('Completion Date',
+                            app.certificates[course.id] ?? formatDate(DateTime.now())),
                         _field('Certificate ID',
-                            'MTA-${course.id.toUpperCase()}-0001'),
+                            app.certificateIdFor(course) ??
+                                'MTA-${course.id.toUpperCase()}-0001'),
                         _field('Instructor', course.instructor),
                       ],
                     ),

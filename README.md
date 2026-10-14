@@ -96,15 +96,18 @@ lib/
   motion.dart      Animation system (reveal, hover, aurora, marquee, count…)
   data.dart        Models + content seed data (courses, products, stories…)
   widgets.dart     Shell/Scaffold, Section/Container, Panel, cards, nav helper
+  session.dart     Auth/session state + roles (Guest, Individual, Employer,
+                   Trainer, Administrator)
   pages/
     home.dart        Home page
     public.dart      About, Services, Coaching, Organisations, Programmes,
                      Learning Hub, Insights, Impact
     contact.dart     Contact form
-    auth.dart        Login + Register
-    learning.dart    Course detail, player, quiz, certificate, learner dashboard
+    auth.dart        Login (with role selection) + Register
+    learning.dart    Course detail, player, quiz (4 question types), certificate
+    account.dart     My Learning, Certificates, Profile (signed-in learner)
     store.dart       Store, product, cart, checkout, order, orders, library
-    dashboards.dart  Employer + Admin dashboards
+    dashboards.dart  PortalScaffold + Learner / Employer / Admin dashboards
 assets/images/     31 extracted brand images
 ```
 
@@ -113,8 +116,22 @@ assets/images/     31 extracted brand images
 `/` `/about` `/services` `/coaching` `/organisations` `/programmes`
 `/upskilling` `/insights` `/impact` `/contact` `/login` `/register`
 `/store` `/cart` `/checkout` `/order` `/myorders` `/library` `/learner`
-`/employer` `/admin` plus argument routes `/course` `/player` `/quiz`
-`/certificate` `/product`.
+`/mylearning` `/certificates` `/profile` `/employer` `/admin` plus argument
+routes `/course` `/player` `/quiz` `/certificate` `/product`.
+
+## Roles, sign-in and portals
+
+Sign-in is role-based (`lib/session.dart`). The Login page lets you pick a role;
+Register creates an Individual or Employer account. After signing in the app bar
+swaps the Login button for an account menu, and the shared `PortalScaffold`
+(`lib/pages/dashboards.dart`) gives every portal a working, active-aware sidebar:
+
+| Role | Lands on | Portal |
+| --- | --- | --- |
+| Individual Learner | `/learner` | Dashboard, My Learning, Certificates, My Orders, Digital Products, Profile |
+| Employer | `/employer` | Dashboard, Employees, Assign Courses, Reports, Purchase, Profile |
+| Trainer | `/admin` | Trainer home, courses, materials, learners, profile |
+| Administrator | `/admin` | Full admin (users, orgs, courses, products, orders, payments, reports, settings) |
 
 ## Brand
 

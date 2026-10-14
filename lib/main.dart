@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 
+import 'app_state.dart';
 import 'data.dart';
 import 'motion.dart';
 import 'theme.dart';
+import 'pages/account.dart';
+import 'pages/admin.dart';
 import 'pages/auth.dart';
 import 'pages/contact.dart';
 import 'pages/dashboards.dart';
+import 'pages/employer.dart';
 import 'pages/home.dart';
 import 'pages/learning.dart';
 import 'pages/public.dart';
 import 'pages/store.dart';
 
-void main() => runApp(const MtAlchemyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await app.load();
+  runApp(const MtAlchemyApp());
+}
 
 class MtAlchemyApp extends StatelessWidget {
   const MtAlchemyApp({super.key});
@@ -37,8 +45,27 @@ class MtAlchemyApp extends StatelessWidget {
     '/myorders': (_) => const MyOrdersPage(),
     '/library': (_) => const DigitalLibraryPage(),
     '/learner': (_) => const LearnerDashboardPage(),
+    '/mylearning': (_) => const MyLearningPage(),
+    '/certificates': (_) => const CertificatesPage(),
+    '/profile': (_) => const ProfilePage(),
     '/employer': (_) => const EmployerDashboardPage(),
+    '/employer/employees': (_) => const EmployerEmployeesPage(),
+    '/employer/assign': (_) => const EmployerAssignPage(),
+    '/employer/reports': (_) => const EmployerReportsPage(),
     '/admin': (_) => const AdminDashboardPage(),
+    '/admin/users': (_) => const AdminUsersPage(),
+    '/admin/organizations': (_) => const AdminOrganizationsPage(),
+    '/admin/courses': (_) => const AdminCoursesPage(),
+    '/admin/assessments': (_) => const AdminAssessmentsPage(),
+    '/admin/certificates': (_) => const AdminCertificatesPage(),
+    '/admin/products': (_) => const AdminProductsPage(),
+    '/admin/orders': (_) => const AdminOrdersPage(),
+    '/admin/payments': (_) => const AdminPaymentsPage(),
+    '/admin/content': (_) => const AdminContentPage(),
+    '/admin/reports': (_) => const AdminReportsPage(),
+    '/admin/settings': (_) => const AdminSettingsPage(),
+    '/admin/materials': (_) => const AdminMaterialsPage(),
+    '/admin/learners': (_) => const AdminLearnersPage(),
   };
 
   /// Routes that carry a model argument. Called via
@@ -72,12 +99,22 @@ class MtAlchemyApp extends StatelessWidget {
       // one animated transition (fade + rise), including the argument routes.
       initialRoute: '/',
       onGenerateRoute: (settings) {
-        final argumentBuilder = argumentBuilders[settings.name];
+        final name = settings.name ?? '/';
+        final argumentBuilder = argumentBuilders[name];
         if (argumentBuilder != null) {
           return fadeSlideRoute(settings, argumentBuilder(settings.arguments));
         }
-        final builder = routeBuilders[settings.name] ?? routeBuilders['/']!;
-        return fadeSlideRoute(settings, builder(context));
+        final builder = routeBuilders[name];
+        if (builder != null) return fadeSlideRoute(settings, builder(context));
+        // Portal sub-routes (e.g. /employer/reports, /admin/users) resolve to
+        // their parent overview screen so every sidebar link is a real link.
+        if (name.startsWith('/admin')) {
+          return fadeSlideRoute(settings, const AdminDashboardPage());
+        }
+        if (name.startsWith('/employer')) {
+          return fadeSlideRoute(settings, const EmployerDashboardPage());
+        }
+        return fadeSlideRoute(settings, routeBuilders['/']!(context));
       },
     );
   }

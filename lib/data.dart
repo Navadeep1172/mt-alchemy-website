@@ -103,6 +103,10 @@ class CurriculumItem {
   final String title;
   final String type; // Video, PDF, Quiz, Text
   const CurriculumItem(this.title, this.type);
+
+  Map<String, dynamic> toJson() => {'title': title, 'type': type};
+  factory CurriculumItem.fromJson(Map<String, dynamic> j) =>
+      CurriculumItem(j['title'] as String, j['type'] as String);
 }
 
 class Course {
@@ -119,6 +123,7 @@ class Course {
   final String description;
   final List<String> objectives;
   final List<CurriculumItem> curriculum;
+  final String status; // Draft | Published | Archived
   const Course({
     required this.id,
     required this.title,
@@ -133,7 +138,76 @@ class Course {
     required this.description,
     required this.objectives,
     required this.curriculum,
+    this.status = 'Published',
   });
+
+  Course copyWith({
+    String? title,
+    String? category,
+    String? instructor,
+    String? duration,
+    String? level,
+    int? modules,
+    double? rating,
+    double? price,
+    String? image,
+    String? description,
+    List<String>? objectives,
+    List<CurriculumItem>? curriculum,
+    String? status,
+  }) =>
+      Course(
+        id: id,
+        title: title ?? this.title,
+        category: category ?? this.category,
+        instructor: instructor ?? this.instructor,
+        duration: duration ?? this.duration,
+        level: level ?? this.level,
+        modules: modules ?? this.modules,
+        rating: rating ?? this.rating,
+        price: price ?? this.price,
+        image: image ?? this.image,
+        description: description ?? this.description,
+        objectives: objectives ?? this.objectives,
+        curriculum: curriculum ?? this.curriculum,
+        status: status ?? this.status,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'category': category,
+        'instructor': instructor,
+        'duration': duration,
+        'level': level,
+        'modules': modules,
+        'rating': rating,
+        'price': price,
+        'image': image,
+        'description': description,
+        'objectives': objectives,
+        'curriculum': curriculum.map((c) => c.toJson()).toList(),
+        'status': status,
+      };
+
+  factory Course.fromJson(Map<String, dynamic> j) => Course(
+        id: j['id'] as String,
+        title: j['title'] as String,
+        category: j['category'] as String,
+        instructor: j['instructor'] as String,
+        duration: j['duration'] as String,
+        level: j['level'] as String,
+        modules: (j['modules'] as num).toInt(),
+        rating: (j['rating'] as num).toDouble(),
+        price: (j['price'] as num).toDouble(),
+        image: j['image'] as String,
+        description: j['description'] as String,
+        objectives: (j['objectives'] as List).cast<String>(),
+        curriculum: (j['curriculum'] as List)
+            .map((e) => CurriculumItem.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        status: j['status'] as String? ?? 'Published',
+      );
 }
 
 class Product {
@@ -155,6 +229,48 @@ class Product {
     required this.image,
     this.stock = 0,
   });
+
+  Product copyWith({
+    String? name,
+    String? type,
+    String? category,
+    double? price,
+    String? description,
+    String? image,
+    int? stock,
+  }) =>
+      Product(
+        id: id,
+        name: name ?? this.name,
+        type: type ?? this.type,
+        category: category ?? this.category,
+        price: price ?? this.price,
+        description: description ?? this.description,
+        image: image ?? this.image,
+        stock: stock ?? this.stock,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'type': type,
+        'category': category,
+        'price': price,
+        'description': description,
+        'image': image,
+        'stock': stock,
+      };
+
+  factory Product.fromJson(Map<String, dynamic> j) => Product(
+        id: j['id'] as String,
+        name: j['name'] as String,
+        type: j['type'] as String,
+        category: j['category'] as String,
+        price: (j['price'] as num).toDouble(),
+        description: j['description'] as String,
+        image: j['image'] as String,
+        stock: (j['stock'] as num?)?.toInt() ?? 0,
+      );
 }
 
 class ImpactStory {
@@ -447,3 +563,25 @@ const countries = [
 ];
 
 const hobbies = ['Reading', 'Sports', 'Music', 'Travel'];
+
+/// ---------------------------------------------------------------------------
+/// Mutable-state seeds (consumed by AppState in `lib/app_state.dart`)
+/// ---------------------------------------------------------------------------
+/// The public catalogue starts from the const lists above; the admin portal can
+/// then add, edit, archive or delete entries at runtime.
+const seedCoursesList = courses;
+const seedProductsList = products;
+
+const seedEmployees = <EmployeeSeed>[
+  EmployeeSeed('Employee A', 'a@abcsdn.com', 'HR', 'Learner', 0.80),
+  EmployeeSeed('Employee B', 'b@abcsdn.com', 'Finance', 'Learner', 1.0),
+  EmployeeSeed('Employee C', 'c@abcsdn.com', 'Sales', 'Learner', 0.45),
+  EmployeeSeed('Employee D', 'd@abcsdn.com', 'Operations', 'Learner', 1.0),
+];
+
+class EmployeeSeed {
+  final String name, email, department, role;
+  final double completion;
+  const EmployeeSeed(
+      this.name, this.email, this.department, this.role, this.completion);
+}

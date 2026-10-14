@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'app_state.dart';
 import 'data.dart';
 import 'motion.dart';
+import 'session.dart';
 import 'theme.dart';
 
 /// Central navigation helper - every button uses named routes through
@@ -55,12 +57,23 @@ class _ShellState extends State<Shell> {
       // ---- Scaffold.floatingActionButton: the cart ----
       floatingActionButton: route == '/cart'
           ? null
-          : FloatingActionButton.extended(
-              onPressed: () => go(context, '/cart'),
-              backgroundColor: Brand.green,
-              foregroundColor: Colors.white,
-              icon: const Icon(Icons.shopping_cart_outlined),
-              label: const Text('Cart'),
+          : ListenableBuilder(
+              listenable: app,
+              builder: (context, _) {
+                final n = app.cartCount;
+                return FloatingActionButton.extended(
+                  onPressed: () => go(context, '/cart'),
+                  backgroundColor: Brand.green,
+                  foregroundColor: Colors.white,
+                  icon: Badge(
+                    isLabelVisible: n > 0,
+                    backgroundColor: Brand.clay,
+                    label: Text('$n'),
+                    child: const Icon(Icons.shopping_cart_outlined),
+                  ),
+                  label: Text(n > 0 ? 'Cart ($n)' : 'Cart'),
+                );
+              },
             ),
       appBar: widget.appBar ? _buildAppBar(context, route, wide) : null,
       drawer: widget.appBar && !wide ? _buildDrawer(context, route) : null,
@@ -100,11 +113,7 @@ class _ShellState extends State<Shell> {
               active: route == item.path,
               onTap: () => go(context, item.path),
             ),
-        IconButton(
-          tooltip: 'Login / Register',
-          onPressed: () => go(context, '/login'),
-          icon: const Icon(Icons.person_outline),
-        ),
+        const _AccountMenu(),
         const SizedBox(width: 16),
       ],
     );
@@ -172,6 +181,58 @@ class _ShellState extends State<Shell> {
                 go(context, '/cart');
               },
             ),
+            ValueListenableBuilder<AppUser?>(
+              valueListenable: session,
+              builder: (context, user, _) {
+                if (user == null) {
+                  return ListTile(
+                    leading: const Icon(Icons.login, color: Brand.green),
+                    title: const Text('Login / Register'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      go(context, '/login');
+                    },
+                  );
+                }
+                final isLearner = user.role == UserRole.individual ||
+                    user.role == UserRole.guest;
+                final links = <NavItem>[
+                  NavItem(user.role.home, 'Dashboard',
+                      Icons.dashboard_outlined),
+                  if (isLearner) ...[
+                    const NavItem('/mylearning', 'My Learning',
+                        Icons.school_outlined),
+                    const NavItem('/certificates', 'Certificates',
+                        Icons.workspace_premium_outlined),
+                    const NavItem('/myorders', 'My Orders',
+                        Icons.receipt_long_outlined),
+                  ],
+                  const NavItem('/profile', 'Profile', Icons.person_outline),
+                ];
+                return Column(children: [
+                  const Divider(),
+                  for (final l in links)
+                    ListTile(
+                      leading: Icon(l.icon, color: Brand.grey),
+                      title: Text(l.label),
+                      onTap: () {
+                        Navigator.pop(context);
+                        go(context, l.path);
+                      },
+                    ),
+                  ListTile(
+                    leading: const Icon(Icons.logout, color: Brand.clayDeep),
+                    title: const Text('Sign out'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      signOut();
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/', (r) => false);
+                    },
+                  ),
+                ]);
+              },
+            ),
           ],
         ),
       ),
@@ -200,6 +261,111 @@ class _LogoBadge extends StatelessWidget {
           Text('MT', style: heading(16, color: Brand.ink, weight: FontWeight.w700)),
     );
   }
+}
+
+/// AppBar account control: a plain login button for guests, or a dropdown with
+/// the signed-in user's name and shortcuts into their portal.
+class _AccountMenu extends StatelessWidget {
+  const _AccountMenu();
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<AppUser?>(
+      valueListenable: session,
+      builder: (context, user, _) {
+        if (user == null) {
+          return TextButton.icon(
+            onPressed: () => go(context, '/login'),
+            icon: const Icon(Icons.person_outline, size: 20),
+            label: const Text('Login'),
+          );
+        }
+        final isLearner = user.role == UserRole.individual ||
+            user.role == UserRole.guest;
+        return PopupMenuButton<String>(
+          tooltip: 'Account',
+          onSelected: (value) {
+            if (value == 'logout') {
+              signOut();
+              Navigator.pushNamedAndRemoveUntil(context, '/', (r) => false);
+            } else {
+              go(context, value);
+            }
+          },
+          itemBuilder: (context) => [
+            PopupMenuItem<String>(
+              enabled: false,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(user.name,
+                      style: body(14, weight: FontWeight.w700)),
+                  Text(user.role.label, style: body(12, color: Brand.grey)),
+                ],
+              ),
+            ),
+            const PopupMenuDivider(),
+            PopupMenuItem<String>(
+                value: user.role.home,
+                child: const _MenuRow(Icons.dashboard_outlined, 'Dashboard')),
+            if (isLearner) ...[
+              const PopupMenuItem<String>(
+                  value: '/mylearning',
+                  child: _MenuRow(Icons.school_outlined, 'My Learning')),
+              const PopupMenuItem<String>(
+                  value: '/certificates',
+                  child:
+                      _MenuRow(Icons.workspace_premium_outlined, 'Certificates')),
+              const PopupMenuItem<String>(
+                  value: '/myorders',
+                  child: _MenuRow(Icons.receipt_long_outlined, 'My Orders')),
+            ],
+            const PopupMenuItem<String>(
+                value: '/profile',
+                child: _MenuRow(Icons.person_outline, 'Profile')),
+            const PopupMenuDivider(),
+            const PopupMenuItem<String>(
+                value: 'logout', child: _MenuRow(Icons.logout, 'Sign out')),
+          ],
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(8, 6, 10, 6),
+            decoration: BoxDecoration(
+              color: Brand.sageTint,
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: Brand.line),
+            ),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              CircleAvatar(
+                radius: 13,
+                backgroundColor: Brand.green,
+                child: Text(user.initials,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700)),
+              ),
+              const SizedBox(width: 8),
+              Text(user.firstName,
+                  style: body(13.5, weight: FontWeight.w600)),
+              const Icon(Icons.expand_more, size: 18, color: Brand.grey),
+            ]),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _MenuRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  const _MenuRow(this.icon, this.label);
+  @override
+  Widget build(BuildContext context) => Row(children: [
+        Icon(icon, size: 18, color: Brand.sage),
+        const SizedBox(width: 10),
+        Text(label),
+      ]);
 }
 
 /// AppBar link with a sliding active/hover underline.

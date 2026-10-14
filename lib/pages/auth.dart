@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
 import '../data.dart';
+import '../session.dart';
 import '../theme.dart';
 import '../widgets.dart';
+
+/// Turn an email like `mabel.tan@mt.com` into a friendly display name.
+String _nameFromEmail(String email) {
+  final local = email.split('@').first;
+  final words = local
+      .split(RegExp(r'[._\-]+'))
+      .where((w) => w.isNotEmpty)
+      .map((w) => w[0].toUpperCase() + w.substring(1))
+      .toList();
+  return words.isEmpty ? 'Learner' : words.join(' ');
+}
 
 /// ---------------------------------------------------------------------------
 /// Login
@@ -17,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool _obscure = true;
+  UserRole _role = UserRole.individual;
 
   @override
   void dispose() {
@@ -27,10 +40,15 @@ class _LoginPageState extends State<LoginPage> {
 
   void _login() {
     if (_formKey.currentState!.validate()) {
+      signIn(AppUser(
+        name: _nameFromEmail(_email.text),
+        email: _email.text.trim(),
+        role: _role,
+      ));
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login Success')),
+        SnackBar(content: Text('Signed in as ${_role.label}')),
       );
-      Navigator.pushReplacementNamed(context, '/learner');
+      Navigator.pushReplacementNamed(context, _role.home);
     }
   }
 
@@ -53,6 +71,24 @@ class _LoginPageState extends State<LoginPage> {
                       Text('Login to access your courses, orders and dashboard.',
                           style: body(14, color: Brand.grey)),
                       const SizedBox(height: 24),
+                      DropdownButtonFormField<UserRole>(
+                        initialValue: _role,
+                        isExpanded: true,
+                        decoration: const InputDecoration(
+                            labelText: 'I am signing in as',
+                            prefixIcon: Icon(Icons.badge_outlined)),
+                        items: [
+                          for (final r in const [
+                            UserRole.individual,
+                            UserRole.employer,
+                            UserRole.trainer,
+                            UserRole.administrator,
+                          ])
+                            DropdownMenuItem(value: r, child: Text(r.label)),
+                        ],
+                        onChanged: (v) => setState(() => _role = v!),
+                      ),
+                      const SizedBox(height: 16),
                       TextFormField(
                         controller: _email,
                         keyboardType: TextInputType.emailAddress,
@@ -164,10 +200,21 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
     if (_formKey.currentState!.validate()) {
+      final role = _accountType == 'Employer'
+          ? UserRole.employer
+          : UserRole.individual;
+      signIn(AppUser(
+        name: _name.text.trim(),
+        email: _email.text.trim(),
+        role: role,
+        organization:
+            _accountType == 'Employer' ? _org.text.trim() : null,
+        country: _country,
+      ));
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registration success')),
       );
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushReplacementNamed(context, role.home);
     }
   }
 
